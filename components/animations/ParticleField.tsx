@@ -6,7 +6,7 @@ interface ParticleFieldProps {
   className?: string;
 }
 
-const ParticleField: React.FC<ParticleFieldProps> = ({ count = 30, className = '' }) => {
+const ParticleField: React.FC<ParticleFieldProps> = ({ count = 15, className = '' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,16 +26,15 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ count = 30, className = '
         pointer-events: none;
         left: ${Math.random() * 100}%;
         top: ${Math.random() * 100}%;
-        opacity: ${Math.random() * 0.5 + 0.2};
-        box-shadow: 0 0 ${Math.random() * 10 + 5}px rgba(0, 240, 255, 0.5);
+        opacity: ${Math.random() * 0.4 + 0.3};
       `;
       container.appendChild(particle);
       particles.push(particle);
 
       gsap.to(particle, {
         duration: Math.random() * 4 + 6,
-        y: Math.random() * 200 - 100,
-        x: Math.random() * 200 - 100,
+        y: Math.random() * 100 - 50,
+        x: Math.random() * 100 - 50,
         opacity: 0,
         repeat: -1,
         yoyo: true,

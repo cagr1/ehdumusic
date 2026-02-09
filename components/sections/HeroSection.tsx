@@ -40,6 +40,7 @@ const HeroSection: React.FC = () => {
             width="800"
             height="400"
             loading="eager"
+            fetchPriority="high"
           />
         </motion.div>
         
