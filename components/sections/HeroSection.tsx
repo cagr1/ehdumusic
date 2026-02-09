@@ -25,7 +25,7 @@ const HeroSection: React.FC = () => {
       
       <motion.div 
         style={{ y: logoY, scale: logoScale, opacity: logoOpacity }}
-        className="relative z-10 w-full max-w-4xl px-12 flex flex-col items-center"
+        className="relative z-10 w-full max-w-4xl px-4 md:px-12 flex flex-col items-center"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.9, filter: 'blur(20px)' }}

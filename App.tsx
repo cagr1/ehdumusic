@@ -126,7 +126,7 @@ const App: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center"
           >
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex flex-col items-center gap-6">
               {navItems.map((item, idx) => (
                 <motion.a
                   key={item.id}
@@ -141,7 +141,7 @@ const App: React.FC = () => {
                 </motion.a>
               ))}
             </div>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4 mt-8">
               {socialLinks.map((link, idx) => (
                 <motion.a
                   key={link.name}
