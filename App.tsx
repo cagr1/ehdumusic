@@ -181,23 +181,23 @@ const App: React.FC = () => {
         <MediaSection />
 
         {/* CONTACT / FOOTER */}
-        <Section id="contact" subtitle={t.contact.subtitle} title={t.contact.title}>
+        <Section id="contact" subtitle={t.contact.subtitle} title={t.contact.title} reverseLayout={true}>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-16">
-            <div>
-              <p className="text-xl text-white/60 mb-8 max-w-md">
+            <div className="md:order-2">
+              <p className="text-xl text-white/60 mb-8 max-w-md md:ml-auto md:text-right">
                 {t.contact.description}
               </p>
-              
-              <div className="space-y-6">
-                <motion.div 
+
+              <div className="space-y-6 md:text-right">
+                <motion.div
                   className="group"
-                  whileHover={{ x: 10 }}
+                  whileHover={{ x: -10 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                 >
                   <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-1">{t.contact.bookings}</p>
-                  <motion.a 
-                    href="mailto:booking@ehdu.com" 
-                    className="text-2xl md:text-3xl font-bold transition-all cursor-pointer"
+                  <motion.a
+                    href="mailto:booking@ehdu.com"
+                    className="text-2xl md:text-3xl font-bold transition-all cursor-pointer inline-block"
                     style={{
                       color: '#ffffff',
                     }}
@@ -208,29 +208,10 @@ const App: React.FC = () => {
                     booking@ehdu.com
                   </motion.a>
                 </motion.div>
-                <motion.div 
-                  className="group"
-                  whileHover={{ x: 10 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                >
-                  <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-1">{t.contact.general}</p>
-                  <motion.a 
-                    href="mailto:info@ehdu.com" 
-                    className="text-2xl md:text-3xl font-bold transition-all cursor-pointer"
-                    style={{
-                      color: '#ffffff',
-                    }}
-                    whileHover={{
-                      color: '#00F0FF',
-                    }}
-                  >
-                    info@ehdu.com
-                  </motion.a>
-                </motion.div>
               </div>
             </div>
 
-            <div className="flex flex-col justify-end gap-12">
+            <div className="flex flex-col justify-end gap-12 md:order-1">
               <div className="grid grid-cols-4 sm:grid-cols-7 md:grid-cols-4 lg:grid-cols-7 gap-6 items-center">
                 {socialLinks.map((link, idx) => (
                   <motion.a 

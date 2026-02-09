@@ -1,3 +1,5 @@
+import { tiledLights } from "three/examples/jsm/tsl/lighting/TiledLightsNode.js";
+
 export const translations = {
   es: {
     nav: {
@@ -10,12 +12,13 @@ export const translations = {
       subtitle: 'Too Many Rules   Polyptych | Savia Park',
     },
     latest: {
-      subtitle: 'Nuevos Sonidos',      
+      title: 'Lanzamientos',
+      subtitle: 'Nuevos Sonidos', 
       platforms: 'Escucha en',
     },
     tour: {
       subtitle: 'Experiencia en Vivo',
-      title: 'Rituales de Fase',
+      title: 'Fechas',
       tickets: 'Entradas',
       support: 'Apoyo',
       info: 'Info',
@@ -25,7 +28,7 @@ export const translations = {
     },
     media: {
       subtitle: 'Ecos Visuales',
-      title: 'Galería de Luz',
+      title: 'Galería',
       performance: 'Presentación',
       watch: 'Ver Video',
     },
@@ -54,12 +57,13 @@ export const translations = {
       subtitle: 'Too Many Rules  Polyptych | Savia Park',
     },
     latest: {
+      title: 'Latest Releases',
       subtitle: 'New Sounds',      
       platforms: 'Listen on',
     },
     tour: {
       subtitle: 'Live Experience',
-      title: 'Phase Rituals',
+      title: 'Dates',
       tickets: 'Tickets',
       support: 'Support',
       info: 'Info',
@@ -69,7 +73,7 @@ export const translations = {
     },
     media: {
       subtitle: 'Visual Echoes',
-      title: 'Gallery of Light',
+      title: 'Gallery',
       performance: 'Performance',
       watch: 'Watch Video',
     },

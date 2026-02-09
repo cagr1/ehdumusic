@@ -33,10 +33,13 @@ const HeroSection: React.FC = () => {
           transition={{ duration: 1.5, ease: "easeOut" }}
           className="relative group cursor-pointer"
         >
-          <img 
-            src={LOGO_IMAGE} 
-            alt="EHDU Liquid Logo" 
+          <img
+            src={LOGO_IMAGE}
+            alt="EHDU - Melodic Techno Artist Logo"
             className="w-full h-auto logo-glow transition-all duration-700 ease-out group-hover:scale-105"
+            width="800"
+            height="400"
+            loading="eager"
           />
         </motion.div>
         

@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from '@iconify/react';
 import { useLanguage } from '../../i18n/LanguageContext';
+import ParticleText from '../ParticleText';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const LatestSection: React.FC = () => {
   const { t } = useLanguage();
-  
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (subtitleRef.current) {
+        gsap.fromTo(
+          subtitleRef.current,
+          { backgroundSize: '0% 2px' },
+          {
+            scrollTrigger: {
+              trigger: subtitleRef.current,
+              start: 'top 85%',
+              once: false,
+            },
+            backgroundSize: '100% 2px',
+            duration: 1.8,
+            ease: 'power2.inOut',
+          }
+        );
+      }
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   const socialLinks = [
     { name: 'Beatport', icon: 'simple-icons:beatport', url: 'https://www.beatport.com/artist/ehdu/928516' },
     { name: 'Spotify', icon: 'simple-icons:spotify', url: 'https://open.spotify.com/artist/5gKvdLCO9jxUgCqWNnpd4o?si=-DI8ipqRQzW_EcwaA5fEaw&nd=1&dlsi=969c082138f54b26' },
@@ -16,8 +45,27 @@ const LatestSection: React.FC = () => {
     <section id="latest" className="py-20 px-6 md:px-20 relative">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4">{t.latest.subtitle}</p>
-          <h2 className="text-5xl md:text-7xl font-black uppercase leading-tight">{t.latest.title}</h2>
+          <motion.p
+            ref={subtitleRef}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4 bg-gradient-to-r from-cyan-400 to-purple-400 bg-left bg-repeat-x"
+            style={{
+              backgroundSize: '0% 2px',
+              backgroundPosition: 'left bottom',
+              width: 'fit-content',
+            }}
+          >
+            {t.latest.subtitle}
+          </motion.p>
+          <ParticleText
+            text={t.latest.title}
+            className="text-6xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tighter"
+            particleCount={80}
+            particleSize={4}
+            particleSpeed={0.3}
+          />
         </div>
 
         <div className="mt-12">

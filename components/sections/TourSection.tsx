@@ -1,19 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { TOUR_DATES } from '../../constants';
 import { useLanguage } from '../../i18n/LanguageContext';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const TourSection: React.FC = () => {
   const { t } = useLanguage();
   const [selectedTourId, setSelectedTourId] = useState<string | null>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (titleRef.current) {
+            gsap.fromTo(
+          titleRef.current,
+          { backgroundSize: '0% 4px' },
+          {
+            scrollTrigger: {
+              trigger: titleRef.current,
+              start: 'top 85%',
+              once: false,
+            },
+            backgroundSize: '100% 4px',
+            duration: 1.8,
+            ease: 'power2.inOut',
+          }
+        );
+      }
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section id="tour" className="py-20 px-6 md:px-20">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 text-right">
-          <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4">{t.tour.subtitle}</p>
-          <h2 className="text-5xl md:text-7xl font-black uppercase leading-tight">{t.tour.title}</h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4"
+          >
+            {t.tour.subtitle}
+          </motion.p>
+          <h2
+            ref={titleRef}
+            className="text-6xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tighter bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
+            style={{
+              backgroundSize: '0% 4px',
+              backgroundPosition: 'left bottom',
+            }}
+          >
+            {t.tour.title}
+          </h2>
         </div>
 
         <div className="flex flex-col gap-1 border-t border-white/10">

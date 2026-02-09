@@ -22,19 +22,19 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (titleRef.current) {
-        gsap.fromTo(
+            gsap.fromTo(
           titleRef.current,
           { backgroundSize: '0% 2px' },
           {
             scrollTrigger: {
               trigger: titleRef.current,
-              start: 'top 80%',
+              start: 'top 85%',
               once: false,
               onEnter: () => {},
               onLeaveBack: () => {}
             },
             backgroundSize: '100% 2px',
-            duration: 1.2,
+            duration: 1.8,
             ease: 'power2.inOut',
           }
         );
@@ -60,11 +60,11 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
             transition={{ duration: 0.8 }}
           >
             {subtitle && <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4">{subtitle}</p>}
-            <h2 
+            <h2
               ref={titleRef}
-              className="text-5xl md:text-7xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all"
+              className="text-6xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tighter bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
               style={{
-                backgroundSize: '0% 2px',
+                backgroundSize: '0% 4px',
                 backgroundPosition: 'left bottom',
               }}
             >
