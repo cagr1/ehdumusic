@@ -19,24 +19,53 @@ const MediaSection: React.FC = () => {
   // Animation for title underline
   useEffect(() => {
     const ctx = gsap.context(() => {
-      [titleRef, galleryTitleRef].forEach((ref) => {
-        if (ref.current) {
-          gsap.fromTo(
-            ref.current,
-            { backgroundSize: '0% 2px' },
-            {
-              scrollTrigger: {
-                trigger: ref.current,
-                start: 'top 85%',
-                once: false,
-              },
-              backgroundSize: '100% 2px',
-              duration: 1.8,
-              ease: 'power2.inOut',
-            }
-          );
-        }
-      });
+      // Media title animation - left to right (title is on the left)
+      if (titleRef.current) {
+        gsap.fromTo(
+          titleRef.current,
+          {
+            backgroundSize: '0% 3px',
+            opacity: 0,
+            x: -50,
+          },
+          {
+            scrollTrigger: {
+              trigger: titleRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+            },
+            backgroundSize: '100% 3px',
+            opacity: 1,
+            x: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+          }
+        );
+      }
+
+      // Fotos title animation - left to right
+      if (galleryTitleRef.current) {
+        gsap.fromTo(
+          galleryTitleRef.current,
+          {
+            backgroundSize: '0% 3px',
+            opacity: 0,
+            x: -50,
+          },
+          {
+            scrollTrigger: {
+              trigger: galleryTitleRef.current,
+              start: 'top 85%',
+              toggleActions: 'play reverse play reverse',
+            },
+            backgroundSize: '100% 3px',
+            opacity: 1,
+            x: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+          }
+        );
+      }
     });
 
     return () => ctx.revert();
@@ -62,9 +91,9 @@ const MediaSection: React.FC = () => {
           </motion.p>
           <h2
             ref={titleRef}
-            className="text-6xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tighter bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
+            className="text-5xl md:text-7xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
             style={{
-              backgroundSize: '0% 4px',
+              backgroundSize: '0% 3px',
               backgroundPosition: 'left bottom',
             }}
           >
@@ -208,19 +237,16 @@ const MediaSection: React.FC = () => {
 
         {/* Photo Gallery Section */}
         <div className="mb-12">
-          <motion.h3
+          <h3
             ref={galleryTitleRef}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
-            className="text-4xl md:text-5xl font-black uppercase mb-8 bg-gradient-to-r from-white via-purple-400 to-white bg-left bg-repeat-x transition-all inline-block"
+            className="text-5xl md:text-7xl font-black uppercase mb-8 bg-gradient-to-r from-white via-purple-400 to-white bg-left bg-repeat-x transition-all inline-block"
             style={{
               backgroundSize: '0% 3px',
               backgroundPosition: 'left bottom',
             }}
           >
-            Fotos
-          </motion.h3>
+            {t.media.photos}
+          </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {PHOTO_GALLERY.map((photo, idx) => (

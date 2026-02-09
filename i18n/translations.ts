@@ -29,6 +29,7 @@ export const translations = {
     media: {
       subtitle: 'Ecos Visuales',
       title: 'Galería',
+      photos: 'Fotos',
       performance: 'Presentación',
       watch: 'Ver Video',
     },
@@ -74,12 +75,13 @@ export const translations = {
     media: {
       subtitle: 'Visual Echoes',
       title: 'Gallery',
+      photos: 'Photos',
       performance: 'Performance',
       watch: 'Watch Video',
     },
     contact: {
       subtitle: 'Connection',
-      title: 'Initiate Contact',
+      title: 'Contact',
       description: 'For booking inquiries, collaborations, and press requests, please reach out to our management team.',
       bookings: 'Bookings',
       general: 'General',

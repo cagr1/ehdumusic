@@ -12,22 +12,49 @@ const TourSection: React.FC = () => {
   const { t } = useLanguage();
   const [selectedTourId, setSelectedTourId] = useState<string | null>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Title animation - right to left (title is on the right)
       if (titleRef.current) {
-            gsap.fromTo(
+        gsap.fromTo(
           titleRef.current,
-          { backgroundSize: '0% 4px' },
+          {
+            backgroundSize: '0% 3px',
+            opacity: 0,
+            x: 50,
+          },
           {
             scrollTrigger: {
               trigger: titleRef.current,
               start: 'top 85%',
-              once: false,
+              toggleActions: 'play reverse play reverse',
             },
-            backgroundSize: '100% 4px',
-            duration: 1.8,
-            ease: 'power2.inOut',
+            backgroundSize: '100% 3px',
+            opacity: 1,
+            x: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+          }
+        );
+      }
+
+      // Subtitle animation
+      if (subtitleRef.current) {
+        gsap.fromTo(
+          subtitleRef.current,
+          { opacity: 0, x: 30 },
+          {
+            scrollTrigger: {
+              trigger: subtitleRef.current,
+              start: 'top 90%',
+              toggleActions: 'play reverse play reverse',
+            },
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power2.out',
           }
         );
       }
@@ -40,19 +67,17 @@ const TourSection: React.FC = () => {
     <section id="tour" className="py-20 px-6 md:px-20">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 text-right">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false }}
+          <p
+            ref={subtitleRef}
             className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4"
           >
             {t.tour.subtitle}
-          </motion.p>
+          </p>
           <h2
             ref={titleRef}
-            className="text-6xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tighter bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
+            className="text-5xl md:text-7xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
             style={{
-              backgroundSize: '0% 4px',
+              backgroundSize: '0% 3px',
               backgroundPosition: 'left bottom',
             }}
           >

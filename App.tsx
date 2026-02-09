@@ -13,6 +13,7 @@ import { Icon } from '@iconify/react';
 import { CustomCursor, DynamicBackground, PageLoader } from './components/animations';
 import { Section, LanguageSwitcher } from './components/ui';
 import { TourSection, LatestSection, MediaSection, HeroSection } from './components/sections';
+import LiquidText from './components/LiquidText';
 import { useLanguage } from './i18n/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -247,29 +248,39 @@ const App: React.FC = () => {
         </Section>
       </main>
 
-      {/* MARQUEE FOOTER */}
-      <div className="w-full overflow-hidden bg-black py-12 border-t border-white/5 relative group hover:border-cyan-400/30 transition-colors">
-        <motion.div 
-          animate={{ x: [0, -2000] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="whitespace-nowrap flex items-center gap-20 select-none group-hover:pause"
-        >
-          {Array.from({ length: 20 }).map((_, i) => (
-            <motion.span 
-              key={i}
-              whileHover={{ scale: 1.1, color: '#00F0FF' }}
-              className="text-[15vw] font-black tracking-tighter opacity-10 group-hover:opacity-30 group-hover:text-cyan-400 transition-all duration-700 cursor-pointer"
-            >
-              EHDU
-            </motion.span>
-          ))}
-        </motion.div>
-      </div>
+      {/* LIQUID TEXT FOOTER - EHDU with liquid effect - Seamless with Contact section */}
+      <div className="w-full bg-black pt-16 pb-12 relative overflow-hidden">
+        {/* Gradient fade from Contact section */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none" />
 
-      {/* FINAL FOOTER STRIP */}
-      <footer className="py-10 bg-black px-12 text-center text-white/10 text-[10px] tracking-[0.5em] uppercase">
-        {t.contact.footer}
-      </footer>
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <LiquidText text="EHDU" className="w-full h-32 md:h-48" />
+        </div>
+
+        {/* Animated background gradient */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 60%)',
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+
+        {/* Footer text integrated */}
+        <div className="mt-8 text-center">
+          <p className="text-white/10 text-[10px] tracking-[0.5em] uppercase">
+            {t.contact.footer}
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
