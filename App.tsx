@@ -3,8 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { 
-  Menu, 
+import {
+  Menu,
   X,
   ChevronRight
 } from 'lucide-react';
@@ -12,8 +12,7 @@ import { Icon } from '@iconify/react';
 
 import { CustomCursor, DynamicBackground, PageLoader } from './components/animations';
 import { Section, LanguageSwitcher } from './components/ui';
-import { TourSection, LatestSection, MediaSection, HeroSection } from './components/sections';
-import LiquidText from './components/LiquidText';
+import { TourSection, LatestSection, MediaSection, HeroSection, FooterSection } from './components/sections';
 import { useLanguage } from './i18n/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -26,7 +25,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       let scrollTimeout: NodeJS.Timeout;
-      
+
       const handleScroll = () => {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
@@ -79,81 +78,80 @@ const App: React.FC = () => {
       <div className="noise-overlay" />
 
       {/* Sticky Navigation */}
-      <nav ref={navRef} className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 md:p-10 mix-blend-difference backdrop-blur-sm transition-all duration-300">
-        <motion.a 
-          href="#"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-2xl font-black tracking-tighter hover:text-cyan-400 transition-colors"
-        >
-          EHDU
-        </motion.a>
-        
-        <div className="hidden md:flex gap-10">
-          {navItems.map((item, idx) => (
-            <motion.a 
-              key={item.id}
-              href={`#${item.id}`}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1, duration: 0.6 }}
-              whileHover={{
-                color: '#00F0FF',
-                textShadow: '0 0 10px rgba(0, 240, 255, 0.8)',
-              }}
-              className="text-sm uppercase tracking-widest font-bold transition-all"
-            >
-              {item.name}
-            </motion.a>
-          ))}
-        </div>
+      <nav
+        ref={navRef}
+        className="fixed top-0 left-0 right-0 z-50 px-6 py-4 md:px-12 transition-all duration-300 backdrop-blur-sm bg-black/0"
+      >
+        <div className="flex items-center justify-between max-w-[1920px] mx-auto">
+          <a href="#latest" className="text-2xl md:text-3xl font-black uppercase tracking-tighter z-50 relative">
+            EHDU
+          </a>
 
-        <button 
-          className="md:hidden text-white"
-          onClick={() => setMobileMenuOpen(true)}
-        >
-          <Menu size={24} />
-        </button>
+          <div className="hidden md:flex items-center gap-12">
+            {navItems.map((item) => (
+              <motion.a
+                key={item.id}
+                href={`#${item.id}`}
+                className="relative text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] hover:text-cyan-400 transition-colors pb-2"
+                whileHover={{ color: '#00F0FF' }}
+              >
+                {item.name}
+                <motion.span
+                  className="absolute bottom-0 left-0 right-0 h-px bg-cyan-400"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.a>
+            ))}
+          </div>
+
+          <button
+            className="md:hidden z-50 relative"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[100] bg-black p-10 flex flex-col justify-between"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center"
           >
-            <div className="flex justify-between items-center">
-              <span className="text-xl font-bold">EHDU</span>
-              <button onClick={() => setMobileMenuOpen(false)}><X size={32} /></button>
-            </div>
-            <div className="flex flex-col gap-6">
-              {navItems.map((item) => (
-                <a 
-                  key={item.id} 
+            <div className="flex flex-col items-center gap-8">
+              {navItems.map((item, idx) => (
+                <motion.a
+                  key={item.id}
                   href={`#${item.id}`}
+                  className="text-4xl font-black uppercase tracking-tighter"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-4xl font-black tracking-tight"
                 >
                   {item.name}
-                </a>
+                </motion.a>
               ))}
             </div>
             <div className="grid grid-cols-4 gap-4">
               {socialLinks.map((link, idx) => (
-                <motion.a 
-                  key={link.name} 
-                  href={link.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <motion.a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: idx * 0.05 }}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.2,
                     color: '#00F0FF',
                     filter: 'drop-shadow(0 0 10px rgba(0, 240, 255, 0.6))',
@@ -181,7 +179,7 @@ const App: React.FC = () => {
         {/* MEDIA */}
         <MediaSection />
 
-        {/* CONTACT / FOOTER */}
+        {/* CONTACT SECTION */}
         <Section id="contact" subtitle={t.contact.subtitle} title={t.contact.title} reverseLayout={true}>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="md:order-2">
@@ -199,12 +197,8 @@ const App: React.FC = () => {
                   <motion.a
                     href="mailto:booking@ehdu.com"
                     className="text-2xl md:text-3xl font-bold transition-all cursor-pointer inline-block"
-                    style={{
-                      color: '#ffffff',
-                    }}
-                    whileHover={{
-                      color: '#00F0FF',
-                    }}
+                    style={{ color: '#ffffff' }}
+                    whileHover={{ color: '#00F0FF' }}
                   >
                     booking@ehdu.com
                   </motion.a>
@@ -212,23 +206,23 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col justify-end gap-12 md:order-1">
+            <div className="flex flex-col justify-end gap-8 md:order-1">
               <div className="grid grid-cols-4 sm:grid-cols-7 md:grid-cols-4 lg:grid-cols-7 gap-6 items-center">
-                {socialLinks.map((link, idx) => (
-                  <motion.a 
+                {socialLinks.map((link) => (
+                  <motion.a
                     key={link.name}
-                    href={link.url} 
+                    href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     initial={{ opacity: 0, scale: 0, rotate: -180 }}
                     whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.4,
                       color: '#00F0FF',
                       filter: 'drop-shadow(0 0 20px rgba(0, 240, 255, 0.8))',
                       rotate: 15,
                       y: -5,
-                    }} 
+                    }}
                     className="text-white/40 transition-all flex justify-center"
                     title={link.name}
                     viewport={{ once: false }}
@@ -238,49 +232,13 @@ const App: React.FC = () => {
                   </motion.a>
                 ))}
               </div>
-              
-              <div className="text-[10px] uppercase tracking-widest text-white/20 space-y-2">
-                <p>&copy; {new Date().getFullYear()} EHDU PRODUCTIONS. ALL RIGHTS RESERVED.</p>
-                <p>MADE BY CARLOS GALLARDO.</p>
-              </div>
             </div>
           </div>
         </Section>
       </main>
 
-      {/* LIQUID TEXT FOOTER - EHDU with liquid effect - Seamless with Contact section */}
-      <div className="w-full bg-black pt-16 pb-12 relative overflow-hidden">
-        {/* Gradient fade from Contact section */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none" />
-
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <LiquidText text="EHDU" className="w-full h-32 md:h-48" />
-        </div>
-
-        {/* Animated background gradient */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.08) 0%, transparent 60%)',
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-
-        {/* Footer text integrated */}
-        <div className="mt-8 text-center">
-          <p className="text-white/10 text-[10px] tracking-[0.5em] uppercase">
-            {t.contact.footer}
-          </p>
-        </div>
-      </div>
+      {/* FOOTER SECTION - Separate but visually connected */}
+      <FooterSection />
     </div>
   );
 };

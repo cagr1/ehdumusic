@@ -77,7 +77,7 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
     <section
       ref={sectionRef}
       id={id}
-      className={`min-h-screen py-24 px-6 md:px-12 flex flex-col justify-center relative overflow-hidden ${className} ${id === 'contact' ? 'pb-12' : ''}`}
+      className={`min-h-screen py-24 px-6 md:px-12 flex flex-col justify-center relative overflow-hidden ${className}`}
     >
       <div className="max-w-7xl mx-auto w-full">
         {title && (

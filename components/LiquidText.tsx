@@ -81,6 +81,7 @@ const LiquidText: React.FC<LiquidTextProps> = ({ text, className = '' }) => {
     <svg
       ref={svgRef}
       className={`w-full h-auto cursor-pointer ${className}`}
+      style={{ background: 'transparent' }}
       viewBox="0 0 400 120"
       preserveAspectRatio="xMidYMid meet"
     >
