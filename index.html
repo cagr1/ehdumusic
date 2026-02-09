@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EHDU | Melodic Techno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        background-color: #000000;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+      }
+      h1, h2, h3 {
+        font-family: 'Syne', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+      }
+      .custom-cursor {
+        pointer-events: none;
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(0, 240, 255, 0.5);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s, background-color 0.3s, box-shadow 0.3s;
+        z-index: 9999;
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+      }
+      .glass-card {
+        background: rgba(139, 0, 255, 0.05);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .glass-card:hover {
+        background: rgba(139, 0, 255, 0.1);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 240, 255, 0.1);
+      }
+      .noise-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        opacity: 0.05;
+        background: url('https://grainy-gradients.vercel.app/noise.svg');
+        z-index: 50;
+      }
+      .text-glow {
+        text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.3));
+      }
+      
+      /* Logo glow effect with smooth transition */
+      .logo-glow {
+        filter: drop-shadow(0 0 50px rgba(139, 0, 255, 0.3));
+        transition: filter 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .logo-glow:hover {
+        filter: drop-shadow(0 0 80px rgba(139, 0, 255, 0.6)) drop-shadow(0 0 120px rgba(139, 0, 255, 0.3));
+      }
+      
+      /* Hero subtitle glow */
+      .hero-subtitle {
+        text-shadow: 0 0 30px rgba(0, 240, 255, 0.8);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .hero-subtitle:hover {
+        text-shadow: 0 0 50px rgba(0, 240, 255, 1), 0 0 80px rgba(139, 0, 255, 0.5);
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+      }
+      
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.6); }
+      }
+
+      @keyframes slide-in {
+        from {
+          opacity: 0;
+          transform: translateX(-100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .animate-pulse-glow {
+        animation: pulse-glow 3s ease-in-out infinite;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(139, 0, 255, 0.4);
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 240, 255, 0.6);
+        background-clip: padding-box;
+      }
+
+      /* Smooth transitions for all interactive elements */
+      button, a {
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      
+      /* Enhanced glass card hover effect */
+      .glass-card {
+        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      
+      .glass-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 240, 255, 0.1), 0 0 60px rgba(139, 0, 255, 0.1);
+      }
+      
+      /* Smooth section transitions */
+      section {
+        transition: opacity 0.6s ease-out;
+      }
+
+      /* Media queries for responsive animations */
+      @media (max-width: 768px) {
+        .custom-cursor {
+          display: none !important;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom": "https://esm.sh/react-dom@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "three": "https://esm.sh/three@^0.182.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "@react-three/fiber": "https://esm.sh/@react-three/fiber@^9.5.0",
+    "@react-three/drei": "https://esm.sh/@react-three/drei@^10.7.7",
+    "framer-motion": "https://esm.sh/framer-motion@^12.34.0",
+    "@iconify/react": "https://esm.sh/@iconify/react@^5.0.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/animations.css">
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

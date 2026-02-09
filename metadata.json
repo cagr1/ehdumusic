@@ -1,0 +1,8 @@
+
+{
+  "name": "EHDU - Melodic Techno Producer",
+  "description": "An immersive, cinematic landing page for the electronic music project EHDU, featuring 3D visuals, audio-reactive components, and high-end melodic techno aesthetics.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
