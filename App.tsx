@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { Icon } from '@iconify/react';
 
-import { CustomCursor, DynamicBackground, PageLoader } from './components/animations';
+import { CustomCursor, DynamicBackground, IntroAnimation } from './components/animations';
 import { Section, LanguageSwitcher } from './components/ui';
 import { TourSection, LatestSection, MediaSection, HeroSection, FooterSection } from './components/sections';
 import { useLanguage } from './i18n/LanguageContext';
@@ -71,7 +71,7 @@ const App: React.FC = () => {
 
   return (
     <div className="relative text-white selection:bg-cyan-400/30">
-      <PageLoader />
+      <IntroAnimation />
       <DynamicBackground />
       <CustomCursor />
       <LanguageSwitcher />

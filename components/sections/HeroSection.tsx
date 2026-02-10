@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../../i18n/LanguageContext';
 
-const LOGO_IMAGE = "images/Logo_2.png";
+const LOGO_IMAGE = "images/EHDU-LOGO-CROMADO.png";
 
 const HeroSection: React.FC = () => {
   const { t } = useLanguage();
@@ -37,8 +37,8 @@ const HeroSection: React.FC = () => {
             src={LOGO_IMAGE}
             alt="EHDU - Melodic Techno Artist Logo"
             className="w-full h-auto logo-glow transition-all duration-700 ease-out group-hover:scale-105"
-            width="800"
-            height="400"
+            width="700"
+            height="300"
             loading="eager"
             fetchPriority="high"
           />
