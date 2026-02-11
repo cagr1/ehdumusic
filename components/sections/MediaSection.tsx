@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Clock, Eye, X, ArrowUpRight } from 'lucide-react';
 import { MEDIA_GALLERY, PHOTO_GALLERY } from '../../constants';
@@ -9,14 +9,113 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Image preload utility
+const preloadImage = (src: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = reject;
+    img.src = src;
+  });
+};
+
+// Skeleton loader component
+const ImageSkeleton: React.FC<{ className?: string }> = ({ className }) => (
+  <div className={`absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 animate-pulse ${className}`}>
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+  </div>
+);
+
+// Optimized image component with blur-up effect
+const OptimizedImage: React.FC<{
+  src: string;
+  alt: string;
+  className?: string;
+  loading?: 'eager' | 'lazy';
+  onLoad?: () => void;
+}> = ({ src, alt, className, loading = 'lazy', onLoad }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    // If image is already cached
+    if (imgRef.current?.complete && imgRef.current?.naturalWidth) {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  const handleLoad = () => {
+    setIsLoaded(true);
+    onLoad?.();
+  };
+
+  const handleError = () => {
+    setHasError(true);
+    setIsLoaded(true);
+  };
+
+  return (
+    <div className="relative w-full h-full overflow-hidden">
+      {/* Skeleton while loading */}
+      {!isLoaded && !hasError && <ImageSkeleton />}
+      
+      {/* Actual image */}
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        className={`${className} transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        loading={loading}
+        decoding="async"
+        onLoad={handleLoad}
+        onError={handleError}
+        style={{ 
+          contentVisibility: 'auto',
+          containIntrinsicSize: '400px 300px',
+        }}
+      />
+      
+      {/* Error fallback */}
+      {hasError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/5">
+          <span className="text-white/30 text-xs">Image unavailable</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const MediaSection: React.FC = () => {
   const { t } = useLanguage();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const galleryTitleRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLElement>(null);
+
+  // Preload gallery images when component mounts
+  useEffect(() => {
+    const preloadGallery = async () => {
+      try {
+        // Preload first 4 images immediately (above the fold)
+        const criticalImages = PHOTO_GALLERY.slice(0, 4).map(p => preloadImage(p.src));
+        await Promise.all(criticalImages);
+        
+        // Then preload remaining images
+        const remainingImages = PHOTO_GALLERY.slice(4).map(p => preloadImage(p.src));
+        Promise.all(remainingImages).catch(() => {}); // Silent fail for remaining
+        
+        setImagesPreloaded(true);
+      } catch {
+        setImagesPreloaded(true);
+      }
+    };
+
+    preloadGallery();
+  }, []);
 
   // Animation for title underline
   useEffect(() => {
@@ -132,11 +231,11 @@ const MediaSection: React.FC = () => {
             >
               {/* Image with reveal effect */}
               <div className="absolute inset-0 overflow-hidden">
-                <img
+                <OptimizedImage
                   src={featuredVideo.thumbnail}
                   alt={`${featuredVideo.title} - ${featuredVideo.description}`}
                   className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 ease-out"
-                  loading="lazy"
+                  loading="eager"
                 />
               </div>
               
@@ -223,11 +322,10 @@ const MediaSection: React.FC = () => {
               }}
             >
               <div className="absolute inset-0 overflow-hidden">
-                <img
+                <OptimizedImage
                   src={item.thumbnail}
                   alt={`${item.title} - ${item.description}`}
                   className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out"
-                  loading="lazy"
                 />
               </div>
               
@@ -306,12 +404,12 @@ const MediaSection: React.FC = () => {
                 }}
               >
                 <div className={`relative overflow-hidden ${idx === 0 || idx === 5 ? 'aspect-[3/4] md:aspect-auto md:h-full' : 'aspect-square'}`}>
-                  {/* Image */}
-                  <img
+                  {/* Optimized image */}
+                  <OptimizedImage
                     src={photo.src}
                     alt={photo.alt}
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
-                    loading="lazy"
+                    loading={idx < 4 ? 'eager' : 'lazy'}
                   />
                   
                   {/* Overlay gradient */}
@@ -398,6 +496,17 @@ const MediaSection: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* CSS for shimmer animation */}
+      <style>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 2s infinite;
+        }
+      `}</style>
     </section>
   );
 };
