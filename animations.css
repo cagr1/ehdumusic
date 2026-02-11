@@ -222,3 +222,191 @@ a, button, [role="button"] {
 .stagger-3 { animation-delay: 0.3s; }
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
+
+/* ============================================
+   INTRO ANIMATION & HERO TRANSITION ENHANCEMENTS
+   ============================================ */
+
+/* Progressive tile reveal base styles */
+.tile-reveal {
+  opacity: 0;
+  transform: scale(1);
+  will-change: opacity, filter, clip-path;
+}
+
+/* Logo transition container */
+.logo-transition-container {
+  position: relative;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Smooth blur transition for backgrounds */
+.blur-transition {
+  transition: backdrop-filter 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hero logo sizing for consistent handoff */
+.hero-logo {
+  max-width: 700px;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 7 / 3;
+  object-fit: contain;
+}
+
+/* Intro logo sizing to match hero */
+.intro-logo {
+  width: 80%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.9));
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .hero-logo {
+    max-width: min(80vw, 400px);
+  }
+  
+  .intro-logo {
+    width: 100%;
+    filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.8));
+  }
+}
+
+/* Responsive adjustments for tablet */
+@media (min-width: 769px) and (max-width: 1280px) {
+  .hero-logo {
+    max-width: min(85vw, 550px);
+  }
+  
+  .intro-logo {
+    width: 70%;
+  }
+}
+
+/* Enhanced glow effect for logos */
+@keyframes logo-glow-intense {
+  0%, 100% {
+    filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.7))
+            drop-shadow(0 0 60px rgba(139, 0, 255, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 50px rgba(0, 240, 255, 0.9))
+            drop-shadow(0 0 80px rgba(139, 0, 255, 0.6));
+  }
+}
+
+.logo-glow-intense {
+  animation: logo-glow-intense 3s ease-in-out infinite;
+}
+
+/* Progressive reveal animation */
+@keyframes progressive-reveal {
+  from {
+    opacity: 0;
+    filter: brightness(0.4) saturate(0.6) blur(12px);
+    clip-path: inset(45% 45% 45% 45% round 10px);
+  }
+  to {
+    opacity: 0.95;
+    filter: brightness(0.92) saturate(1.15) blur(0px);
+    clip-path: inset(0% 0% 0% 0% round 8px);
+  }
+}
+
+/* Fade out with blur animation */
+@keyframes fade-blur-out {
+  from {
+    opacity: 1;
+    filter: brightness(0.92) saturate(1.1) blur(0px);
+  }
+  to {
+    opacity: 0;
+    filter: brightness(0.35) saturate(0.6) blur(15px);
+  }
+}
+
+/* Background blur animation for transition */
+@keyframes bg-blur-in {
+  from {
+    backdrop-filter: blur(0px);
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+  to {
+    backdrop-filter: blur(25px);
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+}
+
+/* Mobile-specific intro animations */
+@media (max-width: 768px) {
+  @keyframes mobile-logo-reveal {
+    from {
+      opacity: 0;
+      scale: 0.95;
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+      filter: blur(0px);
+    }
+  }
+  
+  .mobile-logo-animate {
+    animation: mobile-logo-reveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+/* Tablet-specific intro animations */
+@media (min-width: 769px) and (max-width: 1280px) {
+  @keyframes tablet-tile-reveal {
+    from {
+      opacity: 0;
+      filter: brightness(0.5) saturate(0.8) blur(8px);
+      clip-path: inset(45% 45% 45% 45% round 8px);
+    }
+    to {
+      opacity: 0.95;
+      filter: brightness(0.94) saturate(1.1) blur(0px);
+      clip-path: inset(0% 0% 0% 0% round 6px);
+    }
+  }
+  
+  .tablet-tile-animate {
+    animation: tablet-tile-reveal 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+/* Desktop intro animations */
+@media (min-width: 1281px) {
+  @keyframes desktop-tile-reveal {
+    from {
+      opacity: 0;
+      filter: brightness(0.35) saturate(0.6) blur(14px);
+      clip-path: inset(48% 48% 48% 48% round 12px);
+    }
+    to {
+      opacity: 0.94;
+      filter: brightness(0.92) saturate(1.15) blur(0px);
+      clip-path: inset(0% 0% 0% 0% round 8px);
+    }
+  }
+  
+  .desktop-tile-animate {
+    animation: desktop-tile-reveal 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+/* Prevent content flash during transition */
+.no-flash {
+  opacity: 0;
+}
+
+.no-flash.visible {
+  opacity: 1;
+  transition: opacity 0.3s ease-out;
+}
