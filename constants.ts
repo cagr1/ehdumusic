@@ -52,10 +52,14 @@ export const MEDIA_GALLERY: MediaItem[] = [
   },
 ];
 
-// Galería de fotos del artista
+// Galería de fotos del artista - Using gallery images from Cover folder
 export const PHOTO_GALLERY: PhotoItem[] = [
-  { id: 'p1', src: '/images/Gallery1.jpg', alt: 'Ehdu live performance at music festival', caption: 'Live Performance' },
-  { id: 'p2', src: '/images/Gallery2', alt: 'Ehdu studio session recording', caption: 'Studio Session' },
-  { id: 'p3', src: '/images/gallery3', alt: 'Ehdu backstage moments', caption: 'Behind the Scenes' },
-  { id: 'p4', src: '/images/gallery4', alt: 'Ehdu at international festival', caption: 'Festival Performance' },
+  { id: 'p1', src: '/Cover/gallery1.webp', alt: 'EHDU live performance', caption: 'Live Performance' },
+  { id: 'p2', src: '/Cover/gallery2.webp', alt: 'EHDU studio session', caption: 'Studio Session' },
+  { id: 'p3', src: '/Cover/gallery3.webp', alt: 'EHDU backstage moments', caption: 'Behind the Scenes' },
+  { id: 'p4', src: '/Cover/gallery4.webp', alt: 'EHDU at festival', caption: 'Festival' },
+  { id: 'p5', src: '/Cover/gallery5.webp', alt: 'EHDU concert', caption: 'Concert' },
+  { id: 'p6', src: '/Cover/gallery6.webp', alt: 'EHDU event', caption: 'Event' },
+  { id: 'p7', src: '/Cover/gallery7.webp', alt: 'EHDU performance', caption: 'Performance' },
+  { id: 'p8', src: '/Cover/gallery8.webp', alt: 'EHDU show', caption: 'Show' },
 ];
