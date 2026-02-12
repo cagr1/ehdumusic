@@ -183,10 +183,6 @@ const App: React.FC = () => {
         <Section id="contact" subtitle={t.contact.subtitle} title={t.contact.title} reverseLayout={true}>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-16">
             <div className="md:order-2">
-              <p className="text-xl text-white/60 mb-8 max-w-md md:ml-auto md:text-right">
-                {t.contact.description}
-              </p>
-
               <div className="space-y-6 md:text-right">
                 <motion.div
                   className="group"
@@ -200,7 +196,7 @@ const App: React.FC = () => {
                     style={{ color: '#ffffff' }}
                     whileHover={{ color: '#00F0FF' }}
                   >
-                    booking@ehdu.com
+                    booking
                   </motion.a>
                 </motion.div>
               </div>

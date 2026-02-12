@@ -91,7 +91,7 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
             {subtitle && <p ref={subtitleRef} className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4">{subtitle}</p>}
             <h2
               ref={titleRef}
-              className="text-5xl md:text-7xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
+              className="text-3xl md:text-7xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
               style={{
                 backgroundSize: '0% 3px',
                 backgroundPosition: 'left bottom',
