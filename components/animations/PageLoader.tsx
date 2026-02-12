@@ -29,7 +29,6 @@ const PageLoader: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="relative"
             >
               <motion.p 
                 className="text-cyan-400 font-black text-4xl tracking-[0.3em] relative z-10"
@@ -39,11 +38,6 @@ const PageLoader: React.FC = () => {
               >
                 EHDU
               </motion.p>
-              <motion.div
-                className="absolute inset-0 blur-2xl bg-cyan-400/30"
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
             </motion.div>
             <motion.p 
               initial={{ opacity: 0 }}
