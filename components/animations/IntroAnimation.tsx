@@ -7,6 +7,14 @@ interface IntroAnimationProps {
 
 type LoaderPhase = 'revealing' | 'typography' | 'splitting';
 type DeviceTier = 'mobile' | 'tablet' | 'desktop';
+type TileLayoutItem = {
+  key: string;
+  imageIndex: number;
+  colStart: number;
+  rowStart: number;
+  colSpan: number;
+  rowSpan: number;
+};
 
 const LOADER_IMAGES = [
   '/Cover/loader1.webp',//div1
@@ -27,27 +35,64 @@ const TIMINGS = {
 
 const getTier = (): DeviceTier => {
   if (typeof window === 'undefined') return 'desktop';
-  if (window.innerWidth <= 680) return 'mobile';
-  if (window.innerWidth <= 1100) return 'tablet';
+  const width = window.innerWidth;
+  const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+  if (width <= 820 || (isCoarse && width <= 900)) return 'mobile';
+  if (width <= 1180) return 'tablet';
   return 'desktop';
 };
 
 const getGridConfig = (tier: DeviceTier) => {
-  if (tier === 'mobile') return { letterSize: 250, letterSpacing: -14 };
-  if (tier === 'tablet') return { letterSize: 290, letterSpacing: -18 };
+  if (tier === 'mobile') return { letterSize: 220, letterSpacing: -12 };
+  if (tier === 'tablet') return { letterSize: 270, letterSpacing: -16 };
   return { letterSize: 340, letterSpacing: -24 };
 };
 
-const TILE_LAYOUT = [
-  { className: 'div1', colStart: 1, rowStart: 1, colSpan: 2, rowSpan: 3 },
-  { className: 'div2', colStart: 3, rowStart: 1, colSpan: 5, rowSpan: 3 },
-  { className: 'div3', colStart: 8, rowStart: 1, colSpan: 3, rowSpan: 5 },
-  { className: 'div5', colStart: 1, rowStart: 4, colSpan: 4, rowSpan: 3 },
-  { className: 'div6', colStart: 5, rowStart: 6, colSpan: 6, rowSpan: 5 },
-  { className: 'div7', colStart: 5, rowStart: 4, colSpan: 3, rowSpan: 2 },
-  { className: 'div8', colStart: 1, rowStart: 7, colSpan: 2, rowSpan: 4 },
-  { className: 'div9', colStart: 3, rowStart: 7, colSpan: 2, rowSpan: 4 },
-];
+const getTierLayout = (tier: DeviceTier): { cols: number; rows: number; tiles: TileLayoutItem[] } => {
+  if (tier === 'mobile') {
+    return {
+      cols: 6,
+      rows: 10,
+      // fewer blocks on mobile for better readability/perf
+      tiles: [
+        { key: 'm1', imageIndex: 0, colStart: 1, rowStart: 1, colSpan: 3, rowSpan: 3 },
+        { key: 'm2', imageIndex: 1, colStart: 4, rowStart: 1, colSpan: 3, rowSpan: 3 },
+        { key: 'm3', imageIndex: 2, colStart: 1, rowStart: 7, colSpan: 3, rowSpan: 3 },
+        { key: 'm4', imageIndex: 4, colStart: 4, rowStart: 7, colSpan: 3, rowSpan: 3 },
+      ],
+    };
+  }
+
+  if (tier === 'tablet') {
+    return {
+      cols: 8,
+      rows: 8,
+      tiles: [
+        { key: 't1', imageIndex: 0, colStart: 1, rowStart: 1, colSpan: 3, rowSpan: 3 },
+        { key: 't2', imageIndex: 1, colStart: 4, rowStart: 1, colSpan: 5, rowSpan: 3 },
+        { key: 't3', imageIndex: 2, colStart: 6, rowStart: 4, colSpan: 3, rowSpan: 3 },
+        { key: 't4', imageIndex: 4, colStart: 1, rowStart: 4, colSpan: 4, rowSpan: 2 },
+        { key: 't5', imageIndex: 5, colStart: 1, rowStart: 6, colSpan: 4, rowSpan: 3 },
+        { key: 't6', imageIndex: 6, colStart: 5, rowStart: 6, colSpan: 2, rowSpan: 3 },
+      ],
+    };
+  }
+
+  return {
+    cols: 10,
+    rows: 10,
+    tiles: [
+      { key: 'div1', imageIndex: 0, colStart: 1, rowStart: 1, colSpan: 2, rowSpan: 3 },
+      { key: 'div2', imageIndex: 1, colStart: 3, rowStart: 1, colSpan: 5, rowSpan: 3 },
+      { key: 'div3', imageIndex: 2, colStart: 8, rowStart: 1, colSpan: 3, rowSpan: 5 },
+      { key: 'div5', imageIndex: 3, colStart: 1, rowStart: 4, colSpan: 4, rowSpan: 3 },
+      { key: 'div6', imageIndex: 4, colStart: 5, rowStart: 6, colSpan: 6, rowSpan: 5 },
+      { key: 'div7', imageIndex: 5, colStart: 5, rowStart: 4, colSpan: 3, rowSpan: 2 },
+      { key: 'div8', imageIndex: 6, colStart: 1, rowStart: 7, colSpan: 2, rowSpan: 4 },
+      { key: 'div9', imageIndex: 7, colStart: 3, rowStart: 7, colSpan: 2, rowSpan: 4 },
+    ],
+  };
+};
 
 const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   const [phase, setPhase] = useState<LoaderPhase>('revealing');
@@ -91,13 +136,14 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   };
 
   const { letterSize, letterSpacing } = getGridConfig(tier);
+  const layout = getTierLayout(tier);
 
   const tiles = useMemo(() => {
-    const gridCenterX = 5.5;
-    const gridCenterY = 5.5;
+    const gridCenterX = (layout.cols + 1) / 2;
+    const gridCenterY = (layout.rows + 1) / 2;
     const maxDist = Math.hypot(gridCenterX - 1, gridCenterY - 1);
 
-    return TILE_LAYOUT.map((tile, index) => {
+    return layout.tiles.map((tile, index) => {
       const tileCenterX = tile.colStart + (tile.colSpan / 2) - 0.5;
       const tileCenterY = tile.rowStart + (tile.rowSpan / 2) - 0.5;
       const centerDist = Math.hypot(tileCenterX - gridCenterX, tileCenterY - gridCenterY);
@@ -106,18 +152,17 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
       const delay = distanceNorm * 0.55 + jitter;
 
       return {
-        key: tile.className,
-        className: tile.className,
+        key: tile.key,
         colStart: tile.colStart,
         rowStart: tile.rowStart,
         colSpan: tile.colSpan,
         rowSpan: tile.rowSpan,
-        imageUrl: LOADER_IMAGES[index % LOADER_IMAGES.length],
+        imageUrl: LOADER_IMAGES[tile.imageIndex % LOADER_IMAGES.length],
         delay,
         distanceNorm,
       };
     });
-  }, []);
+  }, [layout]);
 
   if (!isVisible) return null;
 
@@ -125,12 +170,15 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
     <div className={`fixed inset-0 z-[99999] overflow-hidden ${phase === 'splitting' ? 'bg-transparent' : 'bg-black'}`}>
       <div
         className="wave-grid absolute inset-0"
-        style={{ background: phase === 'splitting' ? 'transparent' : '#000' }}
+        style={{
+          background: phase === 'splitting' ? 'transparent' : '#000',
+          gridTemplateColumns: `repeat(${layout.cols}, 1fr)`,
+          gridTemplateRows: `repeat(${layout.rows}, 1fr)`,
+        }}
       >
         {tiles.map((tile) => (
           <WaveTile
             key={tile.key}
-            className={tile.className}
             colStart={tile.colStart}
             rowStart={tile.rowStart}
             colSpan={tile.colSpan}
@@ -139,6 +187,8 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
             delay={tile.delay}
             distanceNorm={tile.distanceNorm}
             tier={tier}
+            gridCols={layout.cols}
+            gridRows={layout.rows}
             phase={phase}
           />
         ))}
@@ -211,8 +261,6 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
           display: grid;
           width: 100%;
           height: 100%;
-          grid-template-columns: repeat(10, 1fr);
-          grid-template-rows: repeat(10, 1fr);
           gap: 0;
           background: #000;
           perspective: 1200px;
@@ -243,15 +291,6 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
           transform-style: preserve-3d;
           will-change: transform, opacity, filter;
         }
-
-        .div1 { grid-column: span 2 / span 2; grid-row: span 3 / span 3; }
-        .div2 { grid-column: span 5 / span 5; grid-row: span 3 / span 3; grid-column-start: 3; }
-        .div3 { grid-column: span 3 / span 3; grid-row: span 5 / span 5; grid-column-start: 8; }
-        .div5 { grid-column: span 4 / span 4; grid-row: span 3 / span 3; grid-row-start: 4; }
-        .div6 { grid-column: span 6 / span 6; grid-row: span 5 / span 5; grid-column-start: 5; grid-row-start: 6; }
-        .div7 { grid-column: span 3 / span 3; grid-row: span 2 / span 2; grid-column-start: 5; grid-row-start: 4; }
-        .div8 { grid-column: span 2 / span 2; grid-row: span 4 / span 4; grid-row-start: 7; }
-        .div9 { grid-column: span 2 / span 2; grid-row: span 4 / span 4; grid-column-start: 3; grid-row-start: 7; }
 
         .ripple-ring {
           position: absolute;
@@ -287,20 +326,6 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
         }
 
         @media (max-width: 680px) {
-          .wave-grid {
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(10, 1fr);
-          }
-
-          .div1 { grid-column: 1 / span 3; grid-row: 1 / span 3; }
-          .div2 { grid-column: 4 / span 3; grid-row: 1 / span 3; }
-          .div3 { grid-column: 1 / span 3; grid-row: 7 / span 3; }
-          .div5 { grid-column: 4 / span 3; grid-row: 7 / span 3; }
-          .div6 { display: none; }
-          .div7 { display: none; }
-          .div8 { display: none; }
-          .div9 { grid-column: 2 / span 4; grid-row: 4 / span 3; }
-
           .skip-btn {
             top: 12px;
             right: 12px;
@@ -314,7 +339,6 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
 };
 
 const WaveTile: React.FC<{
-  className: string;
   colStart: number;
   rowStart: number;
   colSpan: number;
@@ -323,15 +347,21 @@ const WaveTile: React.FC<{
   delay: number;
   distanceNorm: number;
   tier: DeviceTier;
+  gridCols: number;
+  gridRows: number;
   phase: LoaderPhase;
-}> = ({ className, colStart, rowStart, colSpan, rowSpan, imageUrl, delay, distanceNorm, tier, phase }) => {
+}> = ({ colStart, rowStart, colSpan, rowSpan, imageUrl, delay, distanceNorm, tier, gridCols, gridRows, phase }) => {
   const lift = 30 * (1 - distanceNorm * 0.55);
   const splitDelay = delay * 0.85;
   const tiltSign = Math.sin(delay * 22) >= 0 ? 1 : -1;
-  const subCols = Math.max(3, Math.min(10, Math.round(colSpan * (tier === 'mobile' ? 1.4 : 1.7))));
-  const subRows = Math.max(3, Math.min(8, Math.round(rowSpan * (tier === 'mobile' ? 1.2 : 1.5))));
-  const centerX = 5.5;
-  const centerY = 5.5;
+  const subCols = tier === 'mobile'
+    ? Math.max(2, Math.min(6, Math.round(colSpan * 1.2)))
+    : Math.max(3, Math.min(10, Math.round(colSpan * 1.7)));
+  const subRows = tier === 'mobile'
+    ? Math.max(2, Math.min(5, Math.round(rowSpan * 1.05)))
+    : Math.max(3, Math.min(8, Math.round(rowSpan * 1.5)));
+  const centerX = (gridCols + 1) / 2;
+  const centerY = (gridRows + 1) / 2;
   const maxDist = Math.hypot(centerX - 1, centerY - 1) || 1;
   const cells = useMemo(() => {
     const items: Array<{ key: string; revealDelay: number; splitDelayValue: number; localNorm: number; bgX: number; bgY: number; }> = [];
@@ -365,14 +395,15 @@ const WaveTile: React.FC<{
 
   return (
     <motion.div
-      className={`wave-tile ${className}`}
+      className="wave-tile"
+      style={{ gridColumn: `${colStart} / span ${colSpan}`, gridRow: `${rowStart} / span ${rowSpan}` }}
       initial={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
       animate={{
         opacity: phase === 'splitting' ? [1, 1, 0.95] : 1,
         scale: phase === 'splitting' ? [1, 1.005, 1] : 1,
         y: phase === 'splitting' ? [0, -(2 + distanceNorm * 4), 0] : 0,
-        rotateX: phase === 'splitting' ? [0, 24, 78] : 0,
-        rotateY: phase === 'splitting' ? [0, 6 * tiltSign, 18 * tiltSign] : 0,
+        rotateX: phase === 'splitting' ? (tier === 'mobile' ? [0, 16, 44] : [0, 24, 78]) : 0,
+        rotateY: phase === 'splitting' ? (tier === 'mobile' ? [0, 3 * tiltSign, 9 * tiltSign] : [0, 6 * tiltSign, 18 * tiltSign]) : 0,
         filter: phase === 'splitting'
             ? ['blur(0px)', 'blur(0px)', 'blur(3px)']
             : 'blur(0px)',
@@ -404,8 +435,8 @@ const WaveTile: React.FC<{
                   : phase === 'splitting'
                     ? [0, -(5 + cell.localNorm * 9), -(14 + cell.localNorm * 20)]
                     : 0,
-                rotateX: phase === 'splitting' ? [0, 18, 68] : 0,
-                rotateY: phase === 'splitting' ? [0, 4 * tiltSign, 12 * tiltSign] : 0,
+                rotateX: phase === 'splitting' ? (tier === 'mobile' ? [0, 10, 34] : [0, 18, 68]) : 0,
+                rotateY: phase === 'splitting' ? (tier === 'mobile' ? [0, 2 * tiltSign, 7 * tiltSign] : [0, 4 * tiltSign, 12 * tiltSign]) : 0,
                 filter: phase === 'revealing'
                   ? ['blur(8px)', 'blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)']
                   : phase === 'splitting'
