@@ -43,9 +43,49 @@ const getTier = (): DeviceTier => {
 };
 
 const getGridConfig = (tier: DeviceTier) => {
-  if (tier === 'mobile') return { letterSize: 220, letterSpacing: -12 };
-  if (tier === 'tablet') return { letterSize: 270, letterSpacing: -16 };
+  if (tier === 'mobile') return { letterSize: 205, letterSpacing: -10 };
+  if (tier === 'tablet') return { letterSize: 255, letterSpacing: -14 };
   return { letterSize: 340, letterSpacing: -24 };
+};
+
+const getMobileWordFit = (width: number, height: number) => {
+  const isLandscape = width > height;
+
+  if (isLandscape) {
+    return {
+      fontSize: Math.min(height * 0.42, width * 0.11, 92),
+      letterSpacing: -1,
+      scaleX: 0.9,
+      y: height * 0.5,
+      sidePadding: Math.max(20, width * 0.06),
+    };
+  }
+
+  let scaleX = 0.95;
+  let letterSpacing = -2;
+
+  // Calibrated around common mobile CSS widths:
+  // 320, 360, 375, 390/393, 412, 428/430
+  if (width <= 320) {
+    scaleX = 0.78;
+    letterSpacing = -1;
+  } else if (width <= 360) {
+    scaleX = 0.84;
+    letterSpacing = -1;
+  } else if (width <= 393) {
+    scaleX = 0.88;
+    letterSpacing = -1;
+  } else if (width <= 430) {
+    scaleX = 0.92;
+  }
+
+  return {
+    fontSize: Math.min(height * 0.24, width * 0.18, 78),
+    letterSpacing,
+    scaleX,
+    y: height * 0.5,
+    sidePadding: Math.max(22, width * 0.08),
+  };
 };
 
 const getTierLayout = (tier: DeviceTier): { cols: number; rows: number; tiles: TileLayoutItem[] } => {
@@ -53,12 +93,13 @@ const getTierLayout = (tier: DeviceTier): { cols: number; rows: number; tiles: T
     return {
       cols: 6,
       rows: 10,
-      // fewer blocks on mobile for better readability/perf
+      // fewer blocks on mobile, but keep a center block so EHDU mask always reveals imagery
       tiles: [
         { key: 'm1', imageIndex: 0, colStart: 1, rowStart: 1, colSpan: 3, rowSpan: 3 },
         { key: 'm2', imageIndex: 1, colStart: 4, rowStart: 1, colSpan: 3, rowSpan: 3 },
         { key: 'm3', imageIndex: 2, colStart: 1, rowStart: 7, colSpan: 3, rowSpan: 3 },
         { key: 'm4', imageIndex: 4, colStart: 4, rowStart: 7, colSpan: 3, rowSpan: 3 },
+        { key: 'm5-center', imageIndex: 7, colStart: 2, rowStart: 4, colSpan: 4, rowSpan: 3 },
       ],
     };
   }
@@ -74,6 +115,7 @@ const getTierLayout = (tier: DeviceTier): { cols: number; rows: number; tiles: T
         { key: 't4', imageIndex: 4, colStart: 1, rowStart: 4, colSpan: 4, rowSpan: 2 },
         { key: 't5', imageIndex: 5, colStart: 1, rowStart: 6, colSpan: 4, rowSpan: 3 },
         { key: 't6', imageIndex: 6, colStart: 5, rowStart: 6, colSpan: 2, rowSpan: 3 },
+        { key: 't7-center', imageIndex: 7, colStart: 4, rowStart: 4, colSpan: 2, rowSpan: 2 },
       ],
     };
   }
@@ -98,12 +140,45 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   const [phase, setPhase] = useState<LoaderPhase>('revealing');
   const [isVisible, setIsVisible] = useState(true);
   const [tier, setTier] = useState<DeviceTier>(getTier);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [viewport, setViewport] = useState(() => ({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1600,
+    height: typeof window !== 'undefined' ? window.innerHeight : 900,
+  }));
   const maskId = useId().replace(/:/g, '-');
 
   useEffect(() => {
     const onResize = () => setTier(getTier());
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  useEffect(() => {
+    const updateViewport = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setViewport({
+        width: Math.max(1, Math.round(rect.width)),
+        height: Math.max(1, Math.round(rect.height)),
+      });
+    };
+
+    updateViewport();
+    const ro = new ResizeObserver(updateViewport);
+    if (containerRef.current) {
+      ro.observe(containerRef.current);
+    }
+    window.addEventListener('resize', updateViewport);
+    window.visualViewport?.addEventListener('resize', updateViewport);
+    window.visualViewport?.addEventListener('scroll', updateViewport);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updateViewport);
+      window.visualViewport?.removeEventListener('resize', updateViewport);
+      window.visualViewport?.removeEventListener('scroll', updateViewport);
+    };
   }, []);
 
   useEffect(() => {
@@ -136,6 +211,21 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   };
 
   const { letterSize, letterSpacing } = getGridConfig(tier);
+  const isMobile = tier === 'mobile';
+  const mobileFit = isMobile ? getMobileWordFit(viewport.width, viewport.height) : null;
+  const mobileSafeSidePadding = mobileFit?.sidePadding ?? Math.max(22, viewport.width * 0.08);
+  const maskWordWidth = isMobile
+    ? viewport.width - (mobileSafeSidePadding * 2)
+    : tier === 'tablet'
+      ? viewport.width * 0.8
+      : viewport.width * 0.7;
+  const computedLetterSize = isMobile
+    ? Math.min(letterSize, mobileFit!.fontSize)
+    : Math.min(letterSize, viewport.height * 0.36, viewport.width * 0.26);
+  const effectiveLetterSpacing = isMobile ? mobileFit!.letterSpacing : letterSpacing;
+  const wordY = isMobile ? mobileFit!.y : viewport.height * 0.5;
+  const estimatedWordWidth = computedLetterSize * 3.45;
+  const mobileScaleX = isMobile ? Math.min(1, maskWordWidth / estimatedWordWidth, mobileFit!.scaleX) : 1;
   const layout = getTierLayout(tier);
 
   const tiles = useMemo(() => {
@@ -167,7 +257,7 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   if (!isVisible) return null;
 
   return (
-    <div className={`fixed inset-0 z-[99999] overflow-hidden ${phase === 'splitting' ? 'bg-transparent' : 'bg-black'}`}>
+    <div ref={containerRef} className={`fixed inset-0 z-[99999] overflow-hidden ${phase === 'splitting' ? 'bg-transparent' : 'bg-black'}`}>
       <div
         className="wave-grid absolute inset-0"
         style={{
@@ -221,30 +311,45 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
             transition={{ duration: phase === 'splitting' ? 0.25 : 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 pointer-events-none"
           >
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+            <svg
+              className="absolute inset-0 w-full h-full"
+              viewBox={`0 0 ${viewport.width} ${viewport.height}`}
+              preserveAspectRatio="none"
+            >
               <defs>
-                <mask id={`ehdu-overlay-mask-${maskId}`} maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="900">
-                  <rect x="0" y="0" width="1600" height="900" fill="white" />
-                  <text
-                    x="800"
-                    y="470"
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fill="black"
-                    fontSize={letterSize}
-                    fontWeight="900"
-                    letterSpacing={letterSpacing}
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    EHDU
-                  </text>
+                <mask
+                  id={`ehdu-overlay-mask-${maskId}`}
+                  maskUnits="userSpaceOnUse"
+                  maskContentUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width={viewport.width}
+                  height={viewport.height}
+                >
+                  <rect x="0" y="0" width={viewport.width} height={viewport.height} fill="white" />
+                  <g transform={`translate(${viewport.width / 2} ${wordY}) scale(${mobileScaleX} 1)`}>
+                    <text
+                      x="0"
+                      y="0"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      alignmentBaseline="middle"
+                      fill="black"
+                      fontSize={computedLetterSize}
+                      fontWeight="900"
+                      letterSpacing={effectiveLetterSpacing}
+                      style={{ fontFamily: 'Arial Black, Arial, sans-serif' }}
+                    >
+                      EHDU
+                    </text>
+                  </g>
                 </mask>
               </defs>
               <rect
                 x="0"
                 y="0"
-                width="1600"
-                height="900"
+                width={viewport.width}
+                height={viewport.height}
                 fill="black"
                 fillOpacity="0.9"
                 mask={`url(#ehdu-overlay-mask-${maskId})`}
