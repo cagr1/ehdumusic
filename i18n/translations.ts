@@ -1,5 +1,3 @@
-import { tiledLights } from "three/examples/jsm/tsl/lighting/TiledLightsNode.js";
-
 export const translations = {
   es: {
     nav: {
@@ -36,12 +34,9 @@ export const translations = {
     contact: {
       subtitle: 'Conexión',
       title: 'Contacto',
-      description: 'Para contratos comunicate con nuestro equipo de gestión.',
       bookings: 'Reservas',
-      general: 'General',
       footer: 'House • Tech House • Progressive House',
       made: 'HECHO POR CARLOS GALLARDO',
-      follow: 'Síguenos',
     },
     loading: {
       text: 'CARGANDO...',
@@ -82,12 +77,9 @@ export const translations = {
     contact: {
       subtitle: 'Connection',
       title: 'Contact',
-      description: 'For booking inquiries, collaborations, and press requests, please reach out to our management team.',
       bookings: 'Bookings',
-      general: 'General',
       footer: 'House • Tech House • Progressive House',
       made: 'MADE BY CARLOS GALLARDO',
-      follow: 'Follow Us',
     },
     loading: {
       text: 'LOADING...',
