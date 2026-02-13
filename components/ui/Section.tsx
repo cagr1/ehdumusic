@@ -2,6 +2,8 @@ import React, { ReactNode, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SectionReveal } from '../animations';
+import { renderGlitchChars, runGlitchBurst } from '../animations/glitch';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -44,6 +46,21 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
             ease: 'power3.out',
           }
         );
+
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!isMobile && !reducedMotion) {
+          ScrollTrigger.create({
+            trigger: titleRef.current,
+            start: 'top 85%',
+            onEnter: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+            onEnterBack: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+          });
+        }
       }
 
       // Subtitle animation
@@ -79,9 +96,10 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
       id={id}
       className={`min-h-screen py-24 px-6 md:px-12 flex flex-col justify-center relative overflow-hidden ${className}`}
     >
-      <div className="max-w-7xl mx-auto w-full">
+      <SectionReveal className="max-w-7xl mx-auto w-full" direction={reverseLayout ? 'right' : 'left'}>
         {title && (
           <motion.div 
+            data-reveal-item
             className={`mb-16 ${reverseLayout ? 'text-right' : 'text-left'}`}
             initial={{ opacity: 0, x: reverseLayout ? 50 : -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -97,12 +115,14 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
                 backgroundPosition: 'left bottom',
               }}
             >
-              {title}
+              {renderGlitchChars(title)}
             </h2>
           </motion.div>
         )}
-        {children}
-      </div>
+        <div data-reveal-item>
+          {children}
+        </div>
+      </SectionReveal>
     </section>
   );
 };

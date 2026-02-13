@@ -1,11 +1,12 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Clock, Eye, X, ArrowUpRight } from 'lucide-react';
+import { Play, Clock, Eye, X, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MEDIA_GALLERY, PHOTO_GALLERY } from '../../constants';
 import { useLanguage } from '../../i18n/LanguageContext';
 import VideoModal from '../VideoModal';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { renderGlitchChars, runGlitchBurst } from '../animations/glitch';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -92,20 +93,28 @@ const MediaSection: React.FC = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
+  const mediaPhotos = PHOTO_GALLERY.filter((photo) => photo.id !== 'p3' && photo.id !== 'p6');
   const titleRef = useRef<HTMLHeadingElement>(null);
   const galleryTitleRef = useRef<HTMLHeadingElement>(null);
+  const galleryWrapperRef = useRef<HTMLDivElement>(null);
+  const galleryTrackRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
+  const currentPhotoIndexRef = useRef(0);
+  const pauseAutoUntilRef = useRef(0);
 
   // Preload gallery images when component mounts
   useEffect(() => {
     const preloadGallery = async () => {
       try {
-        // Preload first 4 images immediately (above the fold)
-        const criticalImages = PHOTO_GALLERY.slice(0, 4).map(p => preloadImage(p.src));
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const criticalCount = isMobile ? 2 : 4;
+
+        // Preload first images immediately (above the fold)
+        const criticalImages = mediaPhotos.slice(0, criticalCount).map(p => preloadImage(p.src));
         await Promise.all(criticalImages);
         
         // Then preload remaining images
-        const remainingImages = PHOTO_GALLERY.slice(4).map(p => preloadImage(p.src));
+        const remainingImages = mediaPhotos.slice(criticalCount).map(p => preloadImage(p.src));
         Promise.all(remainingImages).catch(() => {}); // Silent fail for remaining
         
         setImagesPreloaded(true);
@@ -137,6 +146,21 @@ const MediaSection: React.FC = () => {
             ease: 'power3.out',
           }
         );
+
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!isMobile && !reducedMotion) {
+          ScrollTrigger.create({
+            trigger: titleRef.current,
+            start: 'top 85%',
+            onEnter: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+            onEnterBack: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+          });
+        }
       }
 
       if (galleryTitleRef.current) {
@@ -156,24 +180,41 @@ const MediaSection: React.FC = () => {
             ease: 'power3.out',
           }
         );
+
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!isMobile && !reducedMotion) {
+          ScrollTrigger.create({
+            trigger: galleryTitleRef.current,
+            start: 'top 85%',
+            onEnter: () => {
+              if (galleryTitleRef.current) runGlitchBurst(galleryTitleRef.current);
+            },
+            onEnterBack: () => {
+              if (galleryTitleRef.current) runGlitchBurst(galleryTitleRef.current);
+            },
+          });
+        }
       }
 
-      // Staggered reveal for gallery items
       gsap.fromTo(
         '.gallery-item',
-        { opacity: 0, y: 60, scale: 0.9 },
+        { opacity: 0, y: 40, scale: 0.96 },
         {
-          scrollTrigger: {
-            trigger: '.photo-gallery-grid',
-            start: 'top 80%',
-            toggleActions: 'play none play reverse',
-          },
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.8,
+          duration: 0.7,
           stagger: 0.08,
           ease: 'power3.out',
+          scrollTrigger: {
+            trigger: galleryWrapperRef.current || '.photo-gallery-grid',
+            start: 'top 86%',
+            toggleActions: 'play none play reverse',
+            // Performance optimizations
+            fastScrollEnd: true,
+            preventOverlaps: true,
+          },
         }
       );
     }, containerRef);
@@ -184,6 +225,146 @@ const MediaSection: React.FC = () => {
   const featuredVideo = MEDIA_GALLERY.find((v) => v.featured);
   const secondaryVideos = MEDIA_GALLERY.filter((v) => !v.featured);
   const activeVideo = MEDIA_GALLERY.find((v) => v.id === selectedVideo);
+  const autoDirectionRef = useRef<1 | -1>(1);
+
+  // Optimized carousel with proper throttling and RAF management
+  const autoScrollRef = useRef<{
+    rafId: number;
+    isPaused: boolean;
+    lastTs: number;
+  }>({ rafId: 0, isPaused: false, lastTs: 0 });
+
+  useEffect(() => {
+    const viewport = galleryWrapperRef.current;
+    const track = galleryTrackRef.current;
+    if (!viewport || !track) return;
+
+    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches || window.innerWidth < 1024;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const speed = window.innerWidth >= 1024 ? 16 : 12;
+
+    const onEnter = () => {
+      autoScrollRef.current.isPaused = true;
+    };
+
+    const onLeave = () => {
+      autoScrollRef.current.isPaused = false;
+    };
+
+    viewport.addEventListener('pointerenter', onEnter);
+    viewport.addEventListener('pointerleave', onLeave);
+
+    // Use a more efficient animation loop with delta time capping
+    const step = (ts: number) => {
+      const state = autoScrollRef.current;
+      
+      if (!state.lastTs) state.lastTs = ts;
+      // Cap delta to prevent large jumps after tab switch
+      const delta = Math.min((ts - state.lastTs) / 1000, 0.1);
+      state.lastTs = ts;
+
+      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+      const isProgrammaticPause = Date.now() < pauseAutoUntilRef.current;
+      
+      if (!isTouchDevice && !prefersReducedMotion && !state.isPaused && !isProgrammaticPause && maxScroll > 0) {
+        let next = viewport.scrollLeft + autoDirectionRef.current * speed * delta;
+
+        if (next <= 0) {
+          next = 0;
+          autoDirectionRef.current = 1;
+        } else if (next >= maxScroll) {
+          next = maxScroll;
+          autoDirectionRef.current = -1;
+        }
+
+        viewport.scrollLeft = next;
+      }
+
+      state.rafId = window.requestAnimationFrame(step);
+    };
+
+    autoScrollRef.current.rafId = window.requestAnimationFrame(step);
+
+    return () => {
+      window.cancelAnimationFrame(autoScrollRef.current.rafId);
+      viewport.removeEventListener('pointerenter', onEnter);
+      viewport.removeEventListener('pointerleave', onLeave);
+    };
+  }, [mediaPhotos.length]); // Only re-run if photo count changes
+
+  // Optimized scroll index tracking with passive listener and throttling
+  useEffect(() => {
+    const viewport = galleryWrapperRef.current;
+    const track = galleryTrackRef.current;
+    if (!viewport || !track) return;
+
+    const cards = Array.from(track.querySelectorAll<HTMLElement>('.gallery-item'));
+    if (!cards.length) return;
+
+    let rafId: number;
+    let needsUpdate = false;
+
+    const updateCurrentIndex = () => {
+      const left = viewport.scrollLeft;
+      let nearestIndex = 0;
+      let nearestDistance = Number.POSITIVE_INFINITY;
+
+      cards.forEach((card, idx) => {
+        const distance = Math.abs(card.offsetLeft - left);
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestIndex = idx;
+        }
+      });
+
+      currentPhotoIndexRef.current = nearestIndex;
+      needsUpdate = false;
+    };
+
+    const onScroll = () => {
+      if (!needsUpdate) {
+        needsUpdate = true;
+        rafId = window.requestAnimationFrame(updateCurrentIndex);
+      }
+    };
+
+    updateCurrentIndex();
+    viewport.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateCurrentIndex, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      viewport.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', updateCurrentIndex);
+    };
+  }, [mediaPhotos.length]);
+
+  // Enhanced nudge function with proper auto-scroll control
+  const nudgeGallery = (direction: 'prev' | 'next') => {
+    const viewport = galleryWrapperRef.current;
+    const track = galleryTrackRef.current;
+    if (!viewport || !track) return;
+
+    const cards = Array.from(track.querySelectorAll<HTMLElement>('.gallery-item'));
+    if (!cards.length) return;
+
+    const current = currentPhotoIndexRef.current;
+    const targetIndex =
+      direction === 'next'
+        ? Math.min(current + 1, cards.length - 1)
+        : Math.max(current - 1, 0);
+
+    const targetCard = cards[targetIndex];
+    if (!targetCard) return;
+
+    // Update direction immediately to prevent auto-scroll from fighting manual control
+    currentPhotoIndexRef.current = targetIndex;
+    autoDirectionRef.current = direction === 'next' ? 1 : -1;
+    pauseAutoUntilRef.current = Date.now() + 1500;
+    
+    // Use instant scroll for better response, then resume auto
+    viewport.scrollTo({ left: targetCard.offsetLeft, behavior: 'auto' });
+  };
 
   return (
     <section id="media" ref={containerRef} className="py-20 px-6 md:px-20 relative overflow-hidden">
@@ -209,7 +390,7 @@ const MediaSection: React.FC = () => {
               backgroundPosition: 'left bottom',
             }}
           >
-            {t.media.title}
+            {renderGlitchChars(t.media.title)}
           </h2>
         </div>
 
@@ -381,61 +562,76 @@ const MediaSection: React.FC = () => {
               backgroundPosition: 'left bottom',
             }}
           >
-            {t.media.photos}
+            {renderGlitchChars(t.media.photos)}
           </h3>
 
-          {/* Masonry-style grid */}
-          <div className="photo-gallery-grid grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            {PHOTO_GALLERY.map((photo, idx) => (
-              <motion.div
-                key={photo.id}
-                className={`gallery-item relative overflow-hidden group cursor-pointer ${
-                  idx === 0 || idx === 5 ? 'md:row-span-2' : ''
-                }`}
-                onClick={() => setSelectedPhoto(photo.src)}
-                onMouseEnter={() => setHoveredPhoto(photo.id)}
-                onMouseLeave={() => setHoveredPhoto(null)}
-                style={{
-                  borderRadius: '12px',
-                  boxShadow: hoveredPhoto === photo.id 
-                    ? '0 0 40px rgba(0, 240, 255, 0.2), 0 0 80px rgba(139, 0, 255, 0.1)' 
-                    : '0 0 20px rgba(0, 0, 0, 0.3)',
-                  transition: 'box-shadow 0.5s ease',
-                }}
+          <div className="photo-gallery-grid relative">
+            <div className="absolute -top-14 right-0 z-20 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => nudgeGallery('prev')}
+                className="group rounded-full border border-white/20 bg-black/35 p-2.5 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.35)] active:scale-90 active:bg-cyan-400/20"
+                aria-label="Previous photos"
               >
-                <div className={`relative overflow-hidden ${idx === 0 || idx === 5 ? 'aspect-[3/4] md:aspect-auto md:h-full' : 'aspect-square'}`}>
-                  {/* Optimized image */}
-                  <OptimizedImage
-                    src={photo.src}
-                    alt={photo.alt}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700 ease-out"
-                    loading={idx < 4 ? 'eager' : 'lazy'}
-                  />
-                  
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  {/* Cyan accent line */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-                  
-                  {/* Corner accent */}
-                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <ArrowUpRight className="text-cyan-400 drop-shadow-lg" size={20} />
+                <ChevronLeft size={18} className="text-white/80 group-hover:text-cyan-400 transition-colors duration-300" />
+              </button>
+              <button
+                type="button"
+                onClick={() => nudgeGallery('next')}
+                className="group rounded-full border border-white/20 bg-black/35 p-2.5 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/50 hover:bg-cyan-400/10 hover:shadow-[0_0_20px_rgba(0,240,255,0.35)] active:scale-90 active:bg-cyan-400/20"
+                aria-label="Next photos"
+              >
+                <ChevronRight size={18} className="text-white/80 group-hover:text-cyan-400 transition-colors duration-300" />
+              </button>
+            </div>
+
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-black to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-black to-transparent" />
+
+            <div
+              ref={galleryWrapperRef}
+              className="no-scrollbar overflow-x-auto pb-2 snap-x snap-proximity md:snap-mandatory scroll-smooth will-change-scroll"
+              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' }}
+            >
+              <div ref={galleryTrackRef} className="flex w-max gap-4 md:gap-6">
+              {mediaPhotos.map((photo, idx) => (
+                <motion.div
+                  key={photo.id}
+                  className="gallery-item relative overflow-hidden group cursor-pointer shrink-0 w-[78vw] sm:w-[66vw] md:w-[56vw] lg:w-[44vw] xl:w-[36vw] rounded-2xl snap-start"
+                  onClick={() => setSelectedPhoto(photo.src)}
+                  onMouseEnter={() => setHoveredPhoto(photo.id)}
+                  onMouseLeave={() => setHoveredPhoto(null)}
+                  style={{
+                    boxShadow: hoveredPhoto === photo.id
+                      ? '0 0 40px rgba(0, 240, 255, 0.2), 0 0 80px rgba(139, 0, 255, 0.1)'
+                      : '0 0 20px rgba(0, 0, 0, 0.35)',
+                    transition: 'box-shadow 0.5s ease',
+                  }}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <OptimizedImage
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                      loading={idx < 4 ? 'eager' : 'lazy'}
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <ArrowUpRight className="text-cyan-400 drop-shadow-lg" size={20} />
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 right-0 p-5 transform translate-y-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-500">
+                      <p className="text-white text-base font-bold tracking-wide">{photo.caption}</p>
+                      <p className="text-cyan-400/70 text-xs mt-1 uppercase tracking-widest">View</p>
+                    </div>
                   </div>
-                  
-                  {/* Caption */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                    <p className="text-white text-sm font-bold tracking-wide">{photo.caption}</p>
-                    <p className="text-cyan-400/70 text-xs mt-1 uppercase tracking-widest">View</p>
-                  </div>
-                  
-                  {/* Shimmer effect on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -505,6 +701,19 @@ const MediaSection: React.FC = () => {
         }
         .animate-shimmer {
           animation: shimmer 2s infinite;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .will-change-scroll {
+          will-change: scroll-position, transform;
+        }
+        .gallery-item {
+          will-change: transform, opacity;
         }
       `}</style>
     </section>

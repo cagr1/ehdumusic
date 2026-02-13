@@ -134,14 +134,18 @@
   animation: border-glow 2s ease-in-out infinite;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* Lenis base styles */
+html.lenis,
+html.lenis body {
+  height: auto;
 }
 
-/* Prevent layout shift */
-* {
-  scroll-behavior: smooth;
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
 /* Enhanced selection */

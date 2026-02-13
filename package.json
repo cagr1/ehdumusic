@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "agents": "node scripts/agents.mjs"
   },
   "dependencies": {
     "@iconify/react": "^5.0.0",
@@ -14,9 +15,11 @@
     "@react-three/fiber": "^9.5.0",
     "framer-motion": "^12.34.0",
     "gsap": "^3.14.2",
+    "lenis": "^1.3.17",
     "lucide-react": "^0.563.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.0",
     "three": "^0.182.0"
   },
   "devDependencies": {

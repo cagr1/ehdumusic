@@ -4,6 +4,7 @@ export const translations = {
       latest: 'Álbum',
       tour: 'Tour',
       media: 'Media',
+      gallery: 'Galería',
       contact: 'Contacto',
     },
     hero: {
@@ -47,6 +48,7 @@ export const translations = {
       latest: 'Latest',
       tour: 'Tour',
       media: 'Media',
+      gallery: 'Gallery',
       contact: 'Contact',
     },
     hero: {

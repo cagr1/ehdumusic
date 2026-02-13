@@ -4,13 +4,16 @@ import { Icon } from '@iconify/react';
 import { useLanguage } from '../../i18n/LanguageContext';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { renderGlitchChars, runGlitchBurst } from '../animations/glitch';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const LatestSection: React.FC = () => {
   const { t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const albumRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -56,6 +59,69 @@ const LatestSection: React.FC = () => {
           }
         );
       }
+
+      if (albumRef.current) {
+        gsap.fromTo(
+          albumRef.current,
+          {
+            opacity: 0,
+            y: 56,
+            scale: 0.94,
+            clipPath: 'inset(18% 8% 20% 8% round 26px)',
+            filter: 'blur(10px)',
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            clipPath: 'inset(0% 0% 0% 0% round 26px)',
+            filter: 'blur(0px)',
+            duration: 1.05,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: albumRef.current,
+              start: 'top 82%',
+              toggleActions: 'play none play reverse',
+              // Performance optimizations
+              fastScrollEnd: true,
+              preventOverlaps: true,
+            },
+          }
+        );
+
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!isMobile && !reducedMotion) {
+          ScrollTrigger.create({
+            trigger: titleRef.current,
+            start: 'top 85%',
+            onEnter: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+            onEnterBack: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+          });
+        }
+      }
+
+      gsap.fromTo(
+        '.latest-social-item',
+        { y: 24, opacity: 0, scale: 0.95 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 55%',
+            toggleActions: 'play none play reverse',
+          },
+        }
+      );
     });
 
     return () => ctx.revert();
@@ -68,8 +134,8 @@ const LatestSection: React.FC = () => {
   ];
 
   return (
-    <section id="latest" className="py-20 px-6 md:px-20 relative">
-      <div className="max-w-7xl mx-auto">
+    <section id="latest" ref={sectionRef} className="py-20 px-6 md:px-20 relative overflow-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto">
         <div className="mb-16">
           <p
             ref={subtitleRef}
@@ -85,16 +151,13 @@ const LatestSection: React.FC = () => {
               backgroundPosition: 'left bottom',
             }}
           >
-            {t.latest.title}
+            {renderGlitchChars(t.latest.title)}
           </h2>
         </div>
 
         <div className="mt-12">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+          <motion.div
+            ref={albumRef}
             className="w-full max-w-4xl mx-auto rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(139,0,255,0.15)] border border-white/10"
           >
             <iframe 
@@ -123,7 +186,11 @@ const LatestSection: React.FC = () => {
               whileHover={{ scale: 1.15, y: -8 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="group flex flex-col items-center gap-3 p-6 rounded-2xl hover:bg-white/[0.03] transition-all duration-500 border border-transparent hover:border-white/10"
+              className="latest-social-item group flex flex-col items-center gap-3 p-6 rounded-2xl hover:bg-white/[0.03] transition-all duration-500 border border-transparent hover:border-white/10"
+              data-reveal-item
+              data-section="latest"
+              style={{ willChange: 'transform, opacity' }}
+              aria-label={link.name}
               title={link.name}
             >
               <div className="relative">

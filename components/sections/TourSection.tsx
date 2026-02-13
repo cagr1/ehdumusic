@@ -5,12 +5,17 @@ import { TOUR_DATES } from '../../constants';
 import { useLanguage } from '../../i18n/LanguageContext';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ParallaxLayer } from '../animations';
+import { renderGlitchChars, runGlitchBurst } from '../animations/glitch';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const TourSection: React.FC = () => {
   const { t } = useLanguage();
   const [selectedTourId, setSelectedTourId] = useState<string | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
 
@@ -58,15 +63,76 @@ const TourSection: React.FC = () => {
           }
         );
       }
+
+      if (listRef.current) {
+        gsap.fromTo(
+          listRef.current.querySelectorAll('[data-tour-item]'),
+          {
+            opacity: 0,
+            y: 36,
+            filter: 'blur(6px)',
+          },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: listRef.current,
+              start: 'top 80%',
+              toggleActions: 'play none play reverse',
+              // Performance optimizations
+              fastScrollEnd: true,
+              preventOverlaps: true,
+            },
+          }
+        );
+
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!isMobile && !reducedMotion) {
+          ScrollTrigger.create({
+            trigger: titleRef.current,
+            start: 'top 85%',
+            onEnter: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+            onEnterBack: () => {
+              if (titleRef.current) runGlitchBurst(titleRef.current);
+            },
+          });
+        }
+      }
+
     });
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="tour" className="py-20 px-6 md:px-20">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-16 text-right">
+    <section id="tour" ref={sectionRef} className="py-20 px-6 md:px-20 relative overflow-hidden">
+      <ParallaxLayer
+        className="absolute -left-24 bottom-12 z-[0] w-[24vw] max-w-[320px]"
+        speed={0.42}
+        yRange={220}
+        opacity={0.1}
+        imageSrc="/Cover/gallery6.webp"
+        imageAlt=""
+        imageClassName="w-full rounded-[20px] object-cover grayscale blur-[0.8px] mix-blend-screen"
+      />
+      <ParallaxLayer
+        className="absolute -right-20 top-[18%] z-[0] w-[22vw] max-w-[300px]"
+        speed={0.28}
+        yRange={180}
+        opacity={0.09}
+        imageSrc="/Cover/gallery3.webp"
+        imageAlt=""
+        imageClassName="w-full rounded-[20px] object-cover grayscale blur-[0.8px] mix-blend-screen"
+      />
+      <div className="relative z-10 max-w-7xl mx-auto">
+        <div ref={headerRef} className="mb-16 text-right">
           <p
             ref={subtitleRef}
             className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4"
@@ -81,11 +147,11 @@ const TourSection: React.FC = () => {
               backgroundPosition: 'left bottom',
             }}
           >
-            {t.tour.title}
+            {renderGlitchChars(t.tour.title)}
           </h2>
         </div>
 
-        <div className="flex flex-col gap-1 border-t border-white/10">
+        <div ref={listRef} className="flex flex-col gap-1 border-t border-white/10">
           {TOUR_DATES.map((tour, idx) => (
             <motion.div
               key={tour.id}
