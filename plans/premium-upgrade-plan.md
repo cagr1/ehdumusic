@@ -8,6 +8,15 @@ El proyecto ha evolucionado significativamente desde la versión inicial. Mucho 
 
 ## ✅ TRABAJO YA IMPLEMENTADO
 
+### Fase 0: Refactorización de Componentes (Feb 2026)
+| Componente | Archivo | Estado |
+|-----------|---------|--------|
+| GalleryGrid | `components/gallery/GalleryGrid.tsx` | ✅ Completado |
+| OptimizedImage | `components/gallery/OptimizedImage.tsx` | ✅ Completado |
+| VideoSection | `components/gallery/VideoSection.tsx` | ✅ Completado |
+| MediaPage refactorizada | `components/pages/MediaPage.tsx` | ✅ Completado |
+| GalleryPage refactorizada | `components/pages/GalleryPage.tsx` | ✅ Completado |
+
 ### Fase 1: Smooth Scroll y Navigation
 | Componente | Archivo | Estado |
 |-----------|---------|--------|
@@ -78,6 +87,18 @@ El proyecto ha evolucionado significativamente desde la versión inicial. Mucho 
 
 ## 🎯 TRABAJO PENDIENTE
 
+### ✅ COMPLETADO - Refactorización de Componentes
+- [x] **Crear componente compartido GalleryGrid**
+  - Props: `layout: 'grid' | 'carousel'`, `showLightbox`, `filter`, `photos`
+  - Ubicación: `components/gallery/GalleryGrid.tsx`
+- [x] **Crear VideoSection** para videos
+  - Ubicación: `components/gallery/VideoSection.tsx`
+- [x] Actualizar MediaPage para usar componentes compartidos
+- [x] Actualizar GalleryPage para usar componente compartido
+- [x] Eliminar código duplicado (~300 líneas)
+
+**Resultado:** Código unificado para galería de fotos, mantenimiento simplificado, UX consistente.
+
 ### Alta Prioridad
 
 #### 1. Micro-interacciones Premium
@@ -116,6 +137,11 @@ El proyecto ha evolucionado significativamente desde la versión inicial. Mucho 
 
 ```
 components/
+├── gallery/                          ← NUEVO - Componentes compartidos
+│   ├── GalleryGrid.tsx              ← Componente unificado de galería
+│   ├── OptimizedImage.tsx           ← Imagen optimizada con skeleton
+│   └── VideoSection.tsx             ← Sección de videos
+├── animations/
 ├── animations/
 │   ├── CustomCursor.tsx      ← mejorar (cursor trail)
 │   ├── DynamicBackground.tsx ← mejorar (WebGL shaders)
