@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Clock, Eye, X, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MEDIA_GALLERY, PHOTO_GALLERY } from '../../constants';
@@ -91,9 +91,16 @@ const MediaSection: React.FC = () => {
   const { t } = useLanguage();
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  const [hoveredPhoto, setHoveredPhoto] = useState<string | null>(null);
-  const [imagesPreloaded, setImagesPreloaded] = useState(false);
-  const mediaPhotos = PHOTO_GALLERY.filter((photo) => photo.id !== 'p3' && photo.id !== 'p6');
+  const mediaPhotos = useMemo(
+    () => PHOTO_GALLERY.filter((photo) => photo.id !== 'p3' && photo.id !== 'p6'),
+    []
+  );
+  const featuredVideo = useMemo(() => MEDIA_GALLERY.find((v) => v.featured), []);
+  const secondaryVideos = useMemo(() => MEDIA_GALLERY.filter((v) => !v.featured), []);
+  const activeVideo = useMemo(
+    () => MEDIA_GALLERY.find((v) => v.id === selectedVideo),
+    [selectedVideo]
+  );
   const titleRef = useRef<HTMLHeadingElement>(null);
   const galleryTitleRef = useRef<HTMLHeadingElement>(null);
   const galleryWrapperRef = useRef<HTMLDivElement>(null);
@@ -117,9 +124,8 @@ const MediaSection: React.FC = () => {
         const remainingImages = mediaPhotos.slice(criticalCount).map(p => preloadImage(p.src));
         Promise.all(remainingImages).catch(() => {}); // Silent fail for remaining
         
-        setImagesPreloaded(true);
       } catch {
-        setImagesPreloaded(true);
+        // Non-blocking preload: continue silently if some assets fail.
       }
     };
 
@@ -222,9 +228,6 @@ const MediaSection: React.FC = () => {
     return () => ctx.revert();
   }, []);
 
-  const featuredVideo = MEDIA_GALLERY.find((v) => v.featured);
-  const secondaryVideos = MEDIA_GALLERY.filter((v) => !v.featured);
-  const activeVideo = MEDIA_GALLERY.find((v) => v.id === selectedVideo);
   const autoDirectionRef = useRef<1 | -1>(1);
 
   // Optimized carousel with proper throttling and RAF management
@@ -340,7 +343,7 @@ const MediaSection: React.FC = () => {
   }, [mediaPhotos.length]);
 
   // Enhanced nudge function with proper auto-scroll control
-  const nudgeGallery = (direction: 'prev' | 'next') => {
+  const nudgeGallery = useCallback((direction: 'prev' | 'next') => {
     const viewport = galleryWrapperRef.current;
     const track = galleryTrackRef.current;
     if (!viewport || !track) return;
@@ -364,7 +367,7 @@ const MediaSection: React.FC = () => {
     
     // Use instant scroll for better response, then resume auto
     viewport.scrollTo({ left: targetCard.offsetLeft, behavior: 'auto' });
-  };
+  }, []);
 
   return (
     <section id="media" ref={containerRef} className="py-20 px-6 md:px-20 relative overflow-hidden">
@@ -599,12 +602,8 @@ const MediaSection: React.FC = () => {
                   key={photo.id}
                   className="gallery-item relative overflow-hidden group cursor-pointer shrink-0 w-[78vw] sm:w-[66vw] md:w-[56vw] lg:w-[44vw] xl:w-[36vw] rounded-2xl snap-start"
                   onClick={() => setSelectedPhoto(photo.src)}
-                  onMouseEnter={() => setHoveredPhoto(photo.id)}
-                  onMouseLeave={() => setHoveredPhoto(null)}
                   style={{
-                    boxShadow: hoveredPhoto === photo.id
-                      ? '0 0 40px rgba(0, 240, 255, 0.2), 0 0 80px rgba(139, 0, 255, 0.1)'
-                      : '0 0 20px rgba(0, 0, 0, 0.35)',
+                    boxShadow: '0 0 20px rgba(0, 0, 0, 0.35)',
                     transition: 'box-shadow 0.5s ease',
                   }}
                 >
@@ -714,6 +713,11 @@ const MediaSection: React.FC = () => {
         }
         .gallery-item {
           will-change: transform, opacity;
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .gallery-item:hover {
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.2), 0 0 80px rgba(139, 0, 255, 0.1) !important;
+          }
         }
       `}</style>
     </section>

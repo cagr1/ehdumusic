@@ -1,242 +1,271 @@
-# Plan de Mejoras Premium - EHDU Music Website
+﻿# EHDU Premium Upgrade Plan
 
-## Estado Actual del Proyecto
+## Objective
+Move EHDU from "good" to "premium showcase" quality inspired by high-end interactive portfolios, without overloading motion or hurting usability.
 
-El proyecto ha evolucionado significativamente desde la versión inicial. Mucho del trabajo de mejora premium ya ha sido implementado.
+This plan is optimized for:
+- Music producer landing page
+- Strong visual identity
+- Smooth perceived performance
+- Real-world production constraints
 
----
+## Creative Direction (Do not skip)
 
-## ✅ TRABAJO YA IMPLEMENTADO
+### Visual Direction
+- Mood: dark cinematic + techno minimal
+- Contrast: high contrast typography over controlled atmosphere
+- Accent colors: max 2 accents at a time
+- Rule: no random effects, every effect must support hierarchy
 
-### Fase 0: Refactorización de Componentes (Feb 2026)
-| Componente | Archivo | Estado |
-|-----------|---------|--------|
-| GalleryGrid | `components/gallery/GalleryGrid.tsx` | ✅ Completado |
-| OptimizedImage | `components/gallery/OptimizedImage.tsx` | ✅ Completado |
-| VideoSection | `components/gallery/VideoSection.tsx` | ✅ Completado |
-| MediaPage refactorizada | `components/pages/MediaPage.tsx` | ✅ Completado |
-| GalleryPage refactorizada | `components/pages/GalleryPage.tsx` | ✅ Completado |
+### Motion Direction
+- Motion intensity target: 5/10
+- Keep only meaningful movement: reveal, emphasis, transition
+- Avoid constant background noise movement across full page
+- Respect reduced motion users everywhere
 
-### Fase 1: Smooth Scroll y Navigation
-| Componente | Archivo | Estado |
-|-----------|---------|--------|
-| Lenis Smooth Scroll | `components/animations/SmoothScroll.tsx` | ✅ Completado |
-| Scroll Progress Bar | `components/ui/ScrollProgress.tsx` | ✅ Completado |
-| Layout Component | `components/layout/Layout.tsx` | ✅ Completado |
-| Nav con Active States | `Layout.tsx` | ✅ Completado |
-| Mobile Menu | `Layout.tsx` | ✅ Completado |
-
-### Fase 2: Transiciones de Sección
-| Componente | Archivo | Estado |
-|-----------|---------|--------|
-| Parallax Layer | `components/animations/ParallaxLayer.tsx` | ✅ Completado |
-| Section Reveal | `components/animations/SectionReveal.tsx` | ✅ Completado |
-| Clip-path reveals | `SectionReveal.tsx` | ✅ Completado |
-
-### Fase 3: Estructura Multi-página
-| Componente | Archivo | Estado |
-|-----------|---------|--------|
-| React Router | `App.tsx` | ✅ Completado |
-| Home Page | `components/pages/HomePage.tsx` | ✅ Completado |
-| Tour Page | `components/pages/TourPage.tsx` | ✅ Completado |
-| Media Page | `components/pages/MediaPage.tsx` | ✅ Completado |
-| Gallery Page | `components/pages/GalleryPage.tsx` | ✅ Completado |
-
-### Fase 4: Lite Mode y Performance
-| Característica | Implementación | Estado |
-|---------------|----------------|--------|
-| Lite Mode | `App.tsx` - `useLiteMode()` hook | ✅ Completado |
-| Reduced Motion | Detección via `matchMedia` | ✅ Completado |
-| Touch Detection | `Layout.tsx` | ✅ Completado |
-| Animaciones reducidas en móvil | Hook `useLiteMode` | ✅ Completado |
-
-### Fase 5: Sistema de Agentes
-| Agente | Archivo | Estado |
-|--------|---------|--------|
-| Animation Agent | `agents/ANIMATION_AGENT.md` | ✅ Completado |
-| Responsive Agent | `agents/RESPONSIVE_AGENT.md` | ✅ Completado |
-| Accessibility Agent | `agents/ACCESSIBILITY_AGENT.md` | ✅ Completado |
-| Performance Agent | `agents/PERFORMANCE_AGENT.md` | ✅ Completado |
-| Security Agent | `agents/SECURITY_AGENT.md` | ✅ Completado |
-| SEO Agent | `agents/SEO_AGENT.md` | ✅ Completado |
-| I18N Agent | `agents/I18N_AGENT.md` | ✅ Completado |
+### Performance Direction
+- Target Lighthouse mobile: >= 90
+- No section should drop below 50-55 FPS on modern laptop
+- Avoid re-render storms from hover/scroll listeners
 
 ---
 
-## 📦 DEPENDENCIAS INSTALADAS
+## Delivery Phases
 
-```json
-{
-  "dependencies": {
-    "@iconify/react": "^5.0.0",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
-    "framer-motion": "^12.34.0",
-    "gsap": "^3.14.2",
-    "lenis": "^1.3.17",
-    "lucide-react": "^0.563.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-router-dom": "^7.13.0",
-    "three": "^0.182.0"
-  }
-}
-```
+## Phase 0 - Baseline and Guardrails (0.5 day)
 
----
+### Goal
+Lock quality baseline before adding new premium layers.
 
-## 🎯 TRABAJO PENDIENTE
+### Tasks
+1. Capture baseline metrics
+- Run Lighthouse mobile + desktop and save scores.
+- Record bundle size from `npm run build`.
+- Record rough FPS behavior in Hero + Media sections.
 
-### ✅ COMPLETADO - Refactorización de Componentes
-- [x] **Crear componente compartido GalleryGrid**
-  - Props: `layout: 'grid' | 'carousel'`, `showLightbox`, `filter`, `photos`
-  - Ubicación: `components/gallery/GalleryGrid.tsx`
-- [x] **Crear VideoSection** para videos
-  - Ubicación: `components/gallery/VideoSection.tsx`
-- [x] Actualizar MediaPage para usar componentes compartidos
-- [x] Actualizar GalleryPage para usar componente compartido
-- [x] Eliminar código duplicado (~300 líneas)
+2. Freeze visual constraints
+- Confirm typography pair, spacing scale, color tokens.
+- Define motion tokens (duration/ease/stagger) in one place.
 
-**Resultado:** Código unificado para galería de fotos, mantenimiento simplificado, UX consistente.
+3. Set implementation guardrails
+- Max 1 animation engine per section (GSAP OR Framer, not both heavily mixed).
+- No per-item React state for hover effects in large lists.
 
-### Alta Prioridad
+### Files
+- `README.md` (optional project notes)
+- `plans/premium-upgrade-plan.md` (this file as source of truth)
 
-#### 1. Micro-interacciones Premium
-- [ ] **Cursor trail** - Agregar partículas following cursor
-- [ ] **Magnetic buttons** - Efecto magnético en botones
-- [ ] **Text reveals** - Animaciones de texto más elaboradas
-
-#### 2. Dynamic Background Enhancement
-- [ ] **WebGL shaders** - Usar Three.js/R3F ya instalados
-- [ ] **Color grading por sección** - Background cambia con el scroll
-- [ ] **Noise animado** - Más dinámico
-
-#### 3. Efectos de Imagen
-- [ ] **Ken Burns effect** en galería
-- [ ] **Distortion en hover** con shaders
-
-#### 4. SEO y Meta
-- [ ] **Open Graph tags** completos
-- [ ] **JSON-LD** para artista musical
-- [ ] **Canonical URL**
-- [ ] **Sitemap** actualizado
-
-#### 5. Performance
-- [ ] **Code splitting** por página
-- [ ] **Preload** de recursos críticos
-- [ ] **Bundle analysis** con `rollup-plugin-visualizer`
-
-#### 6. Accessibility
-- [ ] **Skip links**
-- [ ] **Focus management** en modales
-- [ ] **ARIA labels** completos
+### Exit Criteria
+- Baseline metrics captured.
+- Motion and visual constraints agreed.
 
 ---
 
-## 📊 ARQUITECTURA ACTUAL
+## Phase 1 - Hero Premium System (1.5 to 2 days)
 
-```
-components/
-├── gallery/                          ← NUEVO - Componentes compartidos
-│   ├── GalleryGrid.tsx              ← Componente unificado de galería
-│   ├── OptimizedImage.tsx           ← Imagen optimizada con skeleton
-│   └── VideoSection.tsx             ← Sección de videos
-├── animations/
-├── animations/
-│   ├── CustomCursor.tsx      ← mejorar (cursor trail)
-│   ├── DynamicBackground.tsx ← mejorar (WebGL shaders)
-│   ├── IntroAnimation.tsx   ← mantener (ya es premium)
-│   ├── ParallaxLayer.tsx    ← ✅ implementado
-│   ├── SectionReveal.tsx     ← ✅ implementado
-│   ├── SmoothScroll.tsx      ← ✅ implementado
-│   ├── glitch.tsx            ← usar
-│   └── index.ts
-├── layout/
-│   └── Layout.tsx            ← ✅ implementado
-├── pages/
-│   ├── HomePage.tsx          ← ✅ implementado
-│   ├── TourPage.tsx         ← ✅ implementado
-│   ├── MediaPage.tsx        ← ✅ implementado
-│   ├── GalleryPage.tsx      ← ✅ implementado
-│   └── index.ts
-├── sections/
-│   ├── HeroSection.tsx
-│   ├── LatestSection.tsx
-│   ├── TourSection.tsx
-│   ├── MediaSection.tsx
-│   ├── FooterSection.tsx
-│   └── index.ts
-├── ui/
-│   ├── ScrollProgress.tsx    ← ✅ implementado
-│   ├── LanguageSwitcher.tsx
-│   ├── Section.tsx
-│   └── index.ts
-├── LiquidText.tsx
-└── VideoModal.tsx
+### Goal
+Build a premium hero that feels authored and memorable.
 
-agents/
-├── ANIMATION_AGENT.md
-├── RESPONSIVE_AGENT.md
-├── ACCESSIBILITY_AGENT.md
-├── PERFORMANCE_AGENT.md
-├── SECURITY_AGENT.md
-├── SEO_AGENT.md
-├── I18N_AGENT.md
-└── README.md
-```
+### Tasks
+1. Hero composition redesign
+- Introduce layered depth: foreground typography, mid visual layer, subtle background atmosphere.
+- Keep CTA and main message always readable.
+
+2. Kinetic typography
+- Add staged text entrance (sequence, not chaos).
+- Add one signature text interaction (hover distortion/glitch micro, subtle).
+
+3. CTA polish
+- Add premium hover response (magnetic or directional highlight).
+- Keep interaction latency low and readable.
+
+4. Reduce visual clutter
+- Remove any effect that competes with headline readability.
+
+### Suggested Files
+- `components/sections/HeroSection.tsx`
+- `components/animations/IntroAnimation.tsx`
+- `animations.css`
+
+### Exit Criteria
+- Hero has clear visual hierarchy in first 2 seconds.
+- CTA is visually obvious and interaction feels premium.
+- No noticeable frame drops on initial load.
 
 ---
 
-## 🔄 PRÓXIMOS PASOS RECOMENDADOS
+## Phase 2 - Motion System Unification (1 day)
 
-### Orden de implementación sugerido:
+### Goal
+Create one coherent motion language across all sections.
 
-1. **Mejoras de SEO**
-   - Open Graph tags en `index.html`
-   - JSON-LD schema para artista musical
-   - Actualizar sitemap
+### Tasks
+1. Motion tokens
+- Standardize durations (fast, normal, slow).
+- Standardize easing curves.
+- Standardize stagger strategy.
 
-2. **Performance**
-   - Code splitting con React.lazy()
-   - Bundle analysis
-   - Image optimization
+2. Replace ad-hoc transitions
+- Audit all `duration`, `delay`, and repeated animation literals.
+- Replace with shared constants.
 
-3. **Visual Effects**
-   - Enhanced cursor con trail
-   - WebGL background con R3F
-   - Image distortion effects
+3. Section-level consistency
+- Header reveals, card reveals, and modal transitions must feel related.
 
-4. **Accessibility**
-   - Skip links
-   - Focus management
-   - ARIA improvements
+### Suggested Files
+- `components/sections/*.tsx`
+- `components/layout/Layout.tsx`
+- `components/VideoModal.tsx`
+- optional: create `constants/motion.ts`
 
----
-
-## 📝 NOTAS
-
-- El proyecto tiene una base sólida con smooth scroll, parallax, y transiciones ya implementadas
-- El sistema de agentes está configurado para mantener la calidad
-- Lite mode ya maneja la experiencia móvil correctamente
-- Las dependencias necesarias ya están instaladas (`lenis`, `react-router-dom`, `three`, `r3f`)
+### Exit Criteria
+- Motion feels consistent page-wide.
+- Reduced-motion fallback remains functional.
 
 ---
 
-## 🧪 TESTING CHECKLIST
+## Phase 3 - Media/Gallery Performance + Premium Feel (1 to 1.5 days)
 
-### Desktop
-- [ ] Chrome latest
-- [ ] Firefox latest
-- [ ] Safari latest
-- [ ] Edge latest
+### Goal
+Keep gallery impressive and smooth under real usage.
 
-### Mobile
-- [ ] iPhone SE, 14, 15
-- [ ] Samsung Galaxy
-- [ ] iPad
+### Tasks
+1. Keep current optimizations and extend
+- Preserve hover via CSS, avoid state-driven hover rerenders.
+- Ensure expensive effects run only when visible.
 
-### Performance
-- [ ] Lighthouse score >= 90
-- [ ] FCP < 1.5s
-- [ ] TTI < 3.5s
-- [ ] CLS < 0.1
+2. Limit active animation load
+- Animate only visible cards where possible.
+- Avoid full-list stagger retriggers while scrolling.
+
+3. Improve image handling
+- Keep eager only for critical items.
+- Ensure all non-critical media are lazy.
+
+4. Interaction polish
+- Keep carousel controls responsive.
+- Add subtle feedback without heavy transforms.
+
+### Suggested Files
+- `components/sections/MediaSection.tsx`
+- `components/gallery/GalleryGrid.tsx`
+- `components/gallery/VideoSection.tsx`
+
+### Exit Criteria
+- Gallery interaction is smooth on desktop and acceptable on mobile.
+- No obvious lag when hovering or nudging carousel.
+
+---
+
+## Phase 4 - Signature Layer (0.5 to 1 day)
+
+### Goal
+Add one memorable signature element tied to artist identity.
+
+### Options (pick ONE first)
+1. Audio-reactive minimal visual line/mesh in hero
+2. Controlled glitch pulse tied to section transitions
+3. Premium light sweep system tied to cursor position (subtle)
+
+### Rule
+- Signature must not hurt readability or navigation.
+- Signature must degrade gracefully on low-power devices.
+
+### Exit Criteria
+- One distinct, ownable effect exists.
+- Effect remains subtle and intentional.
+
+---
+
+## Phase 5 - Conversion and UX Polish (0.5 day)
+
+### Goal
+Make premium look also convert and feel complete.
+
+### Tasks
+1. CTA flow check
+- Primary CTA always visible in hero and at section ends.
+- Social links and media actions clearly accessible.
+
+2. Microcopy alignment
+- Tighten headings and supporting lines for confidence and clarity.
+
+3. Mobile polish
+- Check spacing rhythm and typography scale.
+- Confirm touch targets and gesture comfort.
+
+### Exit Criteria
+- UX feels premium and practical, not just visual.
+
+---
+
+## Phase 6 - Technical Final Pass (0.5 to 1 day)
+
+### Goal
+Ship-ready quality bar.
+
+### Tasks
+1. Bundle and load
+- Run `npm run build` and inspect largest chunks.
+- Apply code splitting to heavy sections if needed.
+
+2. Lighthouse pass
+- Optimize until mobile score >= 90.
+
+3. Accessibility pass
+- Keyboard flow for modals and nav.
+- ARIA labels where needed.
+- Contrast checks for all key text.
+
+4. Browser/device sanity
+- Chrome + Safari + Firefox quick pass.
+- Mobile viewport checks.
+
+### Exit Criteria
+- Performance, accessibility, and visual quality all pass minimum bar.
+
+---
+
+## Execution Checklist (Order)
+
+1. Phase 0 baseline
+2. Phase 1 hero premium
+3. Phase 2 motion unification
+4. Phase 3 media/gallery smoothness
+5. Phase 4 signature effect
+6. Phase 5 conversion polish
+7. Phase 6 technical final pass
+
+---
+
+## Daily Working Protocol
+
+For each day/sprint:
+1. Pick 1 phase chunk only.
+2. Implement smallest testable slice.
+3. Run build + quick perf check.
+4. Keep/remove changes based on objective metrics.
+5. Document final decisions in `PROJECT_SUMMARY.txt`.
+
+---
+
+## Definition of Done (Premium)
+
+Project is premium-ready only if all are true:
+- Hero feels authored and memorable within 2 seconds.
+- Motion is coherent, not noisy.
+- Media section is smooth with no obvious lag.
+- Mobile Lighthouse >= 90.
+- Visual identity is consistent and intentional.
+- One signature effect exists and is tasteful.
+
+---
+
+## Notes for "Inspired but not extreme"
+
+Use inspiration for direction, not imitation.
+- Keep effect density controlled.
+- Keep readability and conversion first.
+- Remove anything that looks impressive but adds friction.
+
+This is the difference between "cool demo" and "premium production site".
