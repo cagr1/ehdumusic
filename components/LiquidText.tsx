@@ -43,8 +43,14 @@ const LiquidText: React.FC<LiquidTextProps> = ({ text, className = '' }) => {
       const isSmallScreen = isCoarsePointer || cssWidth < 768;
       const maxByHeight = cssHeight * (isSmallScreen ? 0.72 : 0.82);
       const maxByWidth = cssWidth * (isSmallScreen ? 0.3 : 0.34);
-      const fontSize = Math.min(maxByHeight, maxByWidth);
+      let fontSize = Math.min(maxByHeight, maxByWidth);
       ctx.font = `900 ${fontSize}px Syne, Arial Black, Arial, sans-serif`;
+      const textWidth = ctx.measureText(text).width;
+      if (textWidth > cssWidth * 0.92) {
+        const scale = (cssWidth * 0.92) / textWidth;
+        fontSize = Math.max(12, fontSize * scale);
+        ctx.font = `900 ${fontSize}px Syne, Arial Black, Arial, sans-serif`;
+      }
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -172,7 +178,7 @@ const LiquidText: React.FC<LiquidTextProps> = ({ text, className = '' }) => {
       if (isCoarsePointer) {
         // Mobile behavior: centered text with subtle horizontal motion (no magnet distortion).
         mobilePhase += 0.02;
-        const drift = Math.sin(mobilePhase) * (canvas.width / dpr) * 0.035;
+        const drift = Math.sin(mobilePhase) * (canvas.width / dpr) * 0.02;
         drawStyledText(drift);
       } else if (hoverActive) {
         // Smooth pointer for less jitter and more premium feel.

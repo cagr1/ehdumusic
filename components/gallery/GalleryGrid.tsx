@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PhotoItem } from '../../types';
+import { PHOTO_GALLERY } from '../../constants';
 import { useLanguage } from '../../i18n/LanguageContext';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -200,11 +201,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({
   const pauseAutoUntilRef = useRef(0);
 
   // Use provided photos or filter default PHOTO_GALLERY
-  const displayPhotos = photos || (
-    filter 
-      ? require('../../constants').PHOTO_GALLERY.filter(filter)
-      : require('../../constants').PHOTO_GALLERY
-  );
+  const displayPhotos = photos || (filter ? PHOTO_GALLERY.filter(filter) : PHOTO_GALLERY);
 
   // Preload images
   useEffect(() => {

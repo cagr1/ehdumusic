@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect, useMemo, ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Menu, X } from 'lucide-react';
 import { Icon } from '@iconify/react';
-import { CustomCursor, DynamicBackground, IntroAnimation, SmoothScroll } from '../animations';
+import { CustomCursor, DynamicBackground, IntroAnimation, SmoothScroll, useSmoothScroll } from '../animations';
 import { LanguageSwitcher, ScrollProgress } from '../ui';
 import { useLanguage } from '../../i18n/LanguageContext';
 
@@ -20,6 +20,8 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode = false }) => {
   const { t } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { scrollTo } = useSmoothScroll();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('latest');
   const navRef = useRef<HTMLDivElement>(null);
@@ -77,9 +79,9 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
   }, []);
 
   const navItems = useMemo(() => [
-    { name: t.nav.latest, path: '/' },
-    { name: t.nav.tour, path: '/tour' },
-    { name: t.nav.media, path: '/media' },
+    { name: t.nav.latest, path: '/#latest' },
+    { name: t.nav.tour, path: '/#tour' },
+    { name: t.nav.media, path: '/#media' },
     { name: t.nav.gallery, path: '/gallery' },
     { name: t.nav.contact, path: '/#contact' },
   ], [t.nav.latest, t.nav.tour, t.nav.media, t.nav.gallery, t.nav.contact]);
@@ -87,6 +89,32 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
   const isActive = (path: string) => {
     if (path.startsWith('/#')) return false;
     return location.pathname === path;
+  };
+
+  const handleNavClick = (path: string) => {
+    setMobileMenuOpen(false);
+
+    if (path.startsWith('/#')) {
+      const targetId = path.replace('/#', '');
+      const goToTarget = () => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          scrollTo(el, { offset: -80, duration: 1 });
+        } else {
+          scrollTo(0, { duration: 0.9 });
+        }
+      };
+
+      if (location.pathname !== '/') {
+        navigate('/');
+        window.setTimeout(goToTarget, 80);
+      } else {
+        goToTarget();
+      }
+      return;
+    }
+
+    navigate(path);
   };
 
   const socialLinks = [
@@ -114,18 +142,20 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
         className="fixed top-0 left-0 right-0 z-50 px-6 py-4 md:px-12 transition-all duration-300 backdrop-blur-sm bg-black/0"
       >
         <div className="flex items-center justify-between max-w-[1920px] mx-auto">
-          <Link
-            to="/"
+          <button
+            type="button"
+            onClick={() => handleNavClick('/#hero')}
             className="text-2xl md:text-3xl font-black uppercase tracking-tighter z-50 relative"
           >
             EHDU
-          </Link>
+          </button>
 
           <div className="hidden md:flex items-center gap-12">
             {navItems.map((item) => (
               <motion.div key={item.path} className="relative">
-                <Link
-                  to={item.path}
+                <button
+                  type="button"
+                  onClick={() => handleNavClick(item.path)}
                   className={`relative text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] transition-colors pb-2 ${
                     isActive(item.path) ? 'text-cyan-400' : 'text-white'
                   } hover:text-cyan-400`}
@@ -138,7 +168,7 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
                     whileHover={{ scaleX: 1 }}
                     transition={{ duration: 0.3 }}
                   />
-                </Link>
+                </button>
               </motion.div>
             ))}
           </div>
@@ -171,15 +201,15 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
                 >
-                  <Link
-                    to={item.path}
+                  <button
+                    type="button"
                     className={`text-4xl font-black uppercase tracking-tighter ${
                       isActive(item.path) ? 'text-cyan-400' : 'text-white'
                     }`}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => handleNavClick(item.path)}
                   >
                     {item.name}
-                  </Link>
+                  </button>
                 </motion.div>
               ))}
             </div>

@@ -578,7 +578,7 @@ const MediaSection: React.FC = () => {
         </div>
 
         {/* Photo Gallery Section */}
-        <div className="mb-12">
+        <div id="gallery" className="mb-12">
           <h3
             ref={galleryTitleRef}
             className="text-5xl md:text-7xl font-black uppercase mb-8 bg-gradient-to-r from-white via-purple-400 to-white bg-left bg-repeat-x transition-all inline-block"
@@ -616,7 +616,11 @@ const MediaSection: React.FC = () => {
             <div
               ref={galleryWrapperRef}
               className="no-scrollbar overflow-x-auto pb-2 snap-x snap-proximity md:snap-mandatory will-change-scroll"
-              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch', scrollBehavior: 'auto' }}
+              style={{
+                WebkitOverflowScrolling: 'touch',
+                scrollBehavior: 'auto',
+                overscrollBehaviorX: 'contain',
+              }}
             >
               <div ref={galleryTrackRef} className="flex w-max gap-4 md:gap-6">
               {mediaPhotos.map((photo, idx) => (
