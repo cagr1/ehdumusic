@@ -33,9 +33,14 @@ const FooterSection: React.FC = () => {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="space-y-3"
         >
-          <p className="text-xs md:text-[10px] uppercase tracking-widest text-white/40">
+          <a
+            href="https://www.carlosgallardo.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs md:text-[10px] uppercase tracking-widest text-white/40 hover:text-white/70 transition-colors cursor-pointer"
+          >
             {t.contact.made}
-          </p>
+          </a>
           <p className="text-xs md:text-[10px] uppercase tracking-[0.5em] text-white/20">
             {t.contact.footer}
           </p>

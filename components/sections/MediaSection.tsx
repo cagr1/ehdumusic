@@ -119,11 +119,33 @@ const MediaSection: React.FC = () => {
         // Preload first images immediately (above the fold)
         const criticalImages = mediaPhotos.slice(0, criticalCount).map(p => preloadImage(p.src));
         await Promise.all(criticalImages);
-        
-        // Then preload remaining images
-        const remainingImages = mediaPhotos.slice(criticalCount).map(p => preloadImage(p.src));
-        Promise.all(remainingImages).catch(() => {}); // Silent fail for remaining
-        
+
+        // Defer remaining preloads to idle time with small concurrency
+        const remaining = mediaPhotos.slice(criticalCount).map(p => p.src);
+        const runIdle = (cb: () => void) => {
+          const ric = (window as any).requestIdleCallback as ((fn: () => void) => void) | undefined;
+          if (ric) ric(cb);
+          else window.setTimeout(cb, 250);
+        };
+
+        runIdle(() => {
+          const queue = remaining.slice();
+          let active = 0;
+          const pump = () => {
+            while (active < 2 && queue.length) {
+              const src = queue.shift();
+              if (!src) break;
+              active += 1;
+              preloadImage(src)
+                .catch(() => {})
+                .finally(() => {
+                  active -= 1;
+                  pump();
+                });
+            }
+          };
+          pump();
+        });
       } catch {
         // Non-blocking preload: continue silently if some assets fail.
       }
@@ -593,8 +615,8 @@ const MediaSection: React.FC = () => {
 
             <div
               ref={galleryWrapperRef}
-              className="no-scrollbar overflow-x-auto pb-2 snap-x snap-proximity md:snap-mandatory scroll-smooth will-change-scroll"
-              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' }}
+              className="no-scrollbar overflow-x-auto pb-2 snap-x snap-proximity md:snap-mandatory will-change-scroll"
+              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch', scrollBehavior: 'auto' }}
             >
               <div ref={galleryTrackRef} className="flex w-max gap-4 md:gap-6">
               {mediaPhotos.map((photo, idx) => (
@@ -612,7 +634,7 @@ const MediaSection: React.FC = () => {
                       src={photo.src}
                       alt={photo.alt}
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                      loading={idx < 4 ? 'eager' : 'lazy'}
+                      loading={idx < 2 ? 'eager' : 'lazy'}
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
