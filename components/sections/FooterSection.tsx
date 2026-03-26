@@ -23,7 +23,7 @@ const FooterSection: React.FC = () => {
           viewport={{ once: false }}
           transition={{ duration: 0.8 }}
         >
-          <LiquidText text="EHDU" className="w-full h-24 md:h-44 mb-6" />
+          <LiquidText text="EHDU" className="w-full h-28 md:h-44 mb-6" />
         </motion.div>
 
         <motion.div

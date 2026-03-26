@@ -27,25 +27,22 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const logoRef = useRef<HTMLImageElement>(null);
   const logoWrapRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
     const logo = logoRef.current;
-    const glow = glowRef.current;
     const logoWrap = logoWrapRef.current;
     const container = containerRef.current;
 
-    if (!cards.length || !logo || !glow || !container || !logoWrap) {
+    if (!cards.length || !logo || !container || !logoWrap) {
       return;
     }
 
     gsap.set(cards, { opacity: 0, scale: 0.98, rotate: 0 });
     gsap.set(logoWrap, { opacity: 0, scale: 0.9, y: LOGO_OFFSET_Y });
     gsap.set(logo, { opacity: 1, scale: 1 });
-    gsap.set(glow, { opacity: 0, scale: 0.6 });
     gsap.set(container, { opacity: 1 });
 
     const tl = gsap.timeline({
@@ -66,33 +63,36 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
       );
     });
 
-    // Act 2: logo impact (match Hero scale feel)
+    // Act 2: clear photos first, then logo impact (no overlap)
+    tl.to(
+      cards,
+      {
+        opacity: 0,
+        scale: 0.94,
+        y: 18,
+        duration: 0.32,
+        ease: 'power2.inOut',
+        stagger: 0.015,
+      },
+      TOTAL_FLASH + 0.05
+    );
+
+    // Logo enters after photos are gone
     tl.to(
       logoWrap,
       { opacity: 1, scale: 1.02, y: LOGO_OFFSET_Y, duration: 0.45, ease: 'power3.out' },
-      TOTAL_FLASH
+      TOTAL_FLASH + 0.35
     );
     tl.to(
       logoWrap,
       { scale: 1.0, y: LOGO_OFFSET_Y, duration: 0.6, ease: 'power3.out' },
-      TOTAL_FLASH + 0.25
+      TOTAL_FLASH + 0.6
     );
-    tl.to(
-      glow,
-      { opacity: 0.9, scale: 1.15, duration: 0.25, ease: 'power2.out' },
-      TOTAL_FLASH + 0.05
-    );
-    tl.to(
-      glow,
-      { opacity: 0, scale: 1.35, duration: 0.45, ease: 'power2.in' },
-      TOTAL_FLASH + 0.25
-    );
-
     // Act 3: fade out (so Hero feels continuous)
     tl.to(
       container,
       { opacity: 0, duration: 0.65, ease: 'power2.out' },
-      TOTAL_FLASH + IMPACT_DURATION + 0.05
+      TOTAL_FLASH + IMPACT_DURATION + 0.15
     );
 
     return () => { tl.kill(); };
@@ -150,21 +150,6 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
           }}
         />
       ))}
-
-      {/* Glow */}
-      <div
-        ref={glowRef}
-        style={{
-          position: 'absolute',
-          width: 'clamp(180px, 30vw, 520px)',
-          aspectRatio: '1 / 1',
-          borderRadius: '999px',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.12) 45%, rgba(255,255,255,0) 70%)',
-          filter: 'blur(8px)',
-          opacity: 0,
-          pointerEvents: 'none',
-        }}
-      />
 
       {/* Logo */}
       <div
