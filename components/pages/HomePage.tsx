@@ -39,7 +39,7 @@ const HomePage: React.FC = () => {
               <div className="group">
                 <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-1">{t.contact.bookings}</p>
                 <a
-                  href="mailto:booking@ehdu.com"
+                  href="mailto:ledum1999@gmail.com"
                   className="text-2xl md:text-3xl font-bold transition-all cursor-pointer inline-block text-white hover:text-cyan-400"
                 >
                   booking

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AnimatePresence } from 'framer-motion';
 import { SmoothScroll } from './components/animations';
 import Layout from './components/layout/Layout';
-import { HomePage, GalleryPage, MediaPage, TourPage } from './components/pages';
+import { HomePage, GalleryPage, MediaPage, TourPage, BioPage } from './components/pages';
 
 // Scroll to top component
 const ScrollToTop: React.FC = () => {
@@ -82,6 +82,14 @@ const AppContent: React.FC = () => {
               element={
                 <Layout showIntro={false} isLiteMode={isLiteMode}>
                   <TourPage />
+                </Layout>
+              }
+            />
+            <Route
+              path="/bio"
+              element={
+                <Layout showIntro={false} isLiteMode={isLiteMode}>
+                  <BioPage />
                 </Layout>
               }
             />

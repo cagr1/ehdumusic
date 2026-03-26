@@ -1,10 +1,11 @@
 export const translations = {
   es: {
     nav: {
-      latest: 'Álbum',
+      latest: 'Album',
       tour: 'Tour',
       media: 'Media',
-      gallery: 'Galería',
+      gallery: 'Galeria',
+      bio: 'Bio',
       contact: 'Contacto',
     },
     hero: {
@@ -12,7 +13,7 @@ export const translations = {
     },
     latest: {
       title: 'Lanzamientos',
-      subtitle: 'Nuevos Sonidos', 
+      subtitle: 'Nuevos Sonidos',
       platforms: 'Escucha en',
     },
     tour: {
@@ -27,17 +28,22 @@ export const translations = {
     },
     media: {
       subtitle: 'Ecos Visuales',
-      title: 'Galería',
+      title: 'Galeria',
       photos: 'Fotos',
-      performance: 'Presentación',
+      performance: 'Presentacion',
       watch: 'Ver Video',
     },
     contact: {
-      subtitle: 'Conexión',
+      subtitle: 'Conexion',
       title: 'Contacto',
       bookings: 'Reservas',
-      footer: 'House • Tech House • Progressive House',
+      footer: 'House - Tech House - Progressive House',
       made: 'HECHO POR CARLOS GALLARDO',
+    },
+    bio: {
+      subtitle: 'Identidad',
+      title: 'Bio',
+      body: 'Nacido en Machala, Ecuador, es un DJ/Producer joven inspirado por el house y el techno. Su sonido se inclina hacia atmosferas progresivas y melodicas, con grooves solidos que sostienen cada viaje. En su universo sonoro conviven texturas hipnoticas, percusion precisa y una narrativa emocional que conecta pista y escucha.',
     },
     loading: {
       text: 'CARGANDO...',
@@ -49,6 +55,7 @@ export const translations = {
       tour: 'Tour',
       media: 'Media',
       gallery: 'Gallery',
+      bio: 'Bio',
       contact: 'Contact',
     },
     hero: {
@@ -56,7 +63,7 @@ export const translations = {
     },
     latest: {
       title: 'Latest Releases',
-      subtitle: 'New Sounds',      
+      subtitle: 'New Sounds',
       platforms: 'Listen on',
     },
     tour: {
@@ -80,8 +87,13 @@ export const translations = {
       subtitle: 'Connection',
       title: 'Contact',
       bookings: 'Bookings',
-      footer: 'House • Tech House • Progressive House',
+      footer: 'House - Tech House - Progressive House',
       made: 'MADE BY CARLOS GALLARDO',
+    },
+    bio: {
+      subtitle: 'Identity',
+      title: 'Bio',
+      body: 'Born in Machala, Ecuador, he is a young DJ/Producer inspired by house and techno. His sound leans toward progressive and melodic atmospheres, driven by solid grooves that hold every journey. In his sonic universe, hypnotic textures, precise percussion, and emotional storytelling live together to connect the dancefloor and the listener.',
     },
     loading: {
       text: 'LOADING...',
