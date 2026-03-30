@@ -69,7 +69,7 @@ const HeroSection: React.FC = () => {
           className="text-center mt-8"
         >
           <motion.h2 
-            className="text-[8px] xs:text-[10px] sm:text-xs md:text-sm lg:text-base uppercase tracking-wider md:tracking-widest text-cyan-400 mb-4 font-black hero-subtitle whitespace-nowrap px-2"
+            className="text-[8px] xs:text-[9px] sm:text-[10px] md:text-xs lg:text-sm uppercase tracking-wider md:tracking-widest text-cyan-400 mb-4 font-black hero-subtitle whitespace-nowrap px-2"
             whileHover={{ 
               scale: 1.05,
             }}

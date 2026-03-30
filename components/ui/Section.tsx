@@ -109,7 +109,7 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
             {subtitle && <p ref={subtitleRef} className="text-xs sm:text-[10px] md:text-xs text-cyan-400 font-bold tracking-widest uppercase mb-4">{subtitle}</p>}
             <h2
               ref={titleRef}
-              className="text-xl sm:text-2xl md:text-4xl lg:text-6xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block min-w-[80px]"
+              className="text-lg sm:text-xl md:text-4xl lg:text-6xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block min-w-[80px]"
               style={{
                 backgroundSize: '0% 3px',
                 backgroundPosition: 'left bottom',
