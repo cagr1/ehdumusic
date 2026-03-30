@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AnimatePresence } from 'framer-motion';
 import { SmoothScroll } from './components/animations';
 import Layout from './components/layout/Layout';
-import { HomePage, GalleryPage, MediaPage, TourPage, BioPage } from './components/pages';
+import { HomePage, GalleryPage, MediaPage, BioPage } from './components/pages';
 
 // Scroll to top component
 const ScrollToTop: React.FC = () => {
@@ -78,14 +78,6 @@ const AppContent: React.FC = () => {
               }
             />
             <Route
-              path="/tour"
-              element={
-                <Layout showIntro={false} isLiteMode={isLiteMode}>
-                  <TourPage />
-                </Layout>
-              }
-            />
-            <Route
               path="/bio"
               element={
                 <Layout showIntro={false} isLiteMode={isLiteMode}>
@@ -106,6 +98,7 @@ const AppContent: React.FC = () => {
   );
 };
 
+// App wrapper with animation on mount
 const App: React.FC = () => {
   return <AppContent />;
 };

@@ -50,6 +50,18 @@ const HeroSection: React.FC = () => {
           />
         </motion.div>
         
+        {/* Separator Bar - separates Too Many Rules | Polyptych */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
+          className="h-px w-full max-w-xl mt-2 mb-6"
+          style={{
+            background: 'linear-gradient(90deg, transparent, #00F0FF 20%, #00F0FF 80%, transparent)',
+            boxShadow: '0 0 10px #00F0FF, 0 0 20px rgba(0, 240, 255, 0.5)',
+          }}
+        />
+        
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

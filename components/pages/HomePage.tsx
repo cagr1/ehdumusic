@@ -1,6 +1,6 @@
 import React from 'react';
 import { Section } from '../ui';
-import { HeroSection, LatestSection, TourSection, MediaSection, FooterSection } from '../sections';
+import { HeroSection, LatestSection, MediaSection, FooterSection } from '../sections';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { Icon } from '@iconify/react';
 
@@ -24,9 +24,6 @@ const HomePage: React.FC = () => {
 
       {/* LATEST RELEASE */}
       <LatestSection />
-
-      {/* TOUR DATES */}
-      <TourSection />
 
       {/* MEDIA */}
       <MediaSection />

@@ -80,12 +80,11 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
 
   const navItems = useMemo(() => [
     { name: t.nav.latest, path: '/#latest' },
-    { name: t.nav.tour, path: '/#tour' },
     { name: t.nav.media, path: '/#media' },
     { name: t.nav.bio, path: '/bio' },
     { name: t.nav.gallery, path: '/gallery' },
     { name: t.nav.contact, path: '/#contact' },
-  ], [t.nav.latest, t.nav.tour, t.nav.media, t.nav.bio, t.nav.gallery, t.nav.contact]);
+  ], [t.nav.latest, t.nav.media, t.nav.bio, t.nav.gallery, t.nav.contact]);
 
   const isActive = (path: string) => {
     if (path.startsWith('/#')) return false;
