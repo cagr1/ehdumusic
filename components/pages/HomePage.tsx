@@ -22,6 +22,15 @@ const HomePage: React.FC = () => {
       {/* HERO */}
       <HeroSection />
 
+      {/* BIO SECTION */}
+      <Section id="bio" subtitle={t.bio.subtitle} title={t.bio.title}>
+        <div className="max-w-3xl text-white/80 text-base md:text-lg leading-relaxed space-y-6 text-justify">
+          {(t.bio.body as string).split('\n\n').map((paragraph: string, index: number) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+      </Section>
+
       {/* LATEST RELEASE */}
       <LatestSection />
 

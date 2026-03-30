@@ -20,7 +20,7 @@ const HeroSection: React.FC = () => {
   const bgOpacity = useTransform(scrollYProgress, [0, 0.6], [0.4, 0]);
 
   return (
-    <section id="hero" ref={heroRef} className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section id="hero" ref={heroRef} className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
       <motion.div style={{ opacity: bgOpacity }} className="absolute inset-0 z-0 bg-gradient-to-b from-purple-900/20 to-black">
       </motion.div>
       
@@ -69,7 +69,7 @@ const HeroSection: React.FC = () => {
           className="text-center mt-8"
         >
           <motion.h2 
-            className="text-sm md:text-xl uppercase tracking-[0.6em] text-cyan-400 mb-4 font-black hero-subtitle"
+            className="text-[8px] xs:text-[10px] sm:text-xs md:text-sm lg:text-base uppercase tracking-wider md:tracking-widest text-cyan-400 mb-4 font-black hero-subtitle whitespace-nowrap px-2"
             whileHover={{ 
               scale: 1.05,
             }}

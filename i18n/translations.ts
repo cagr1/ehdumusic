@@ -8,7 +8,7 @@ export const translations = {
       contact: 'Contacto',
     },
     hero: {
-      subtitle: 'Too Many Rules   Polyptych | Savia Park',
+      subtitle: 'Too Many Rules | Polyptych | Savia Park',
     },
     latest: {
       title: 'Musica',
@@ -55,7 +55,7 @@ Con releases en Too Many Rules, Polyptych, Savia Park, Bigbells Records y Dirty 
       contact: 'Contact',
     },
     hero: {
-      subtitle: 'Too Many Rules  Polyptych | Savia Park',
+      subtitle: 'Too Many Rules | Polyptych | Savia Park',
     },
     latest: {
       title: 'Music',

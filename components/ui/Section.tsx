@@ -94,22 +94,22 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
     <section
       ref={sectionRef}
       id={id}
-      className={`min-h-screen py-24 px-6 md:px-12 flex flex-col justify-center relative overflow-hidden ${className}`}
+      className={`min-h-screen py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 flex flex-col justify-center relative overflow-hidden ${className}`}
     >
       <SectionReveal className="max-w-7xl mx-auto w-full" direction={reverseLayout ? 'right' : 'left'}>
         {title && (
           <motion.div 
             data-reveal-item
-            className={`mb-16 ${reverseLayout ? 'text-right' : 'text-left'}`}
+            className={`mb-8 sm:mb-12 md:mb-16 ${reverseLayout ? 'text-right' : 'text-left'}`}
             initial={{ opacity: 0, x: reverseLayout ? 50 : -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false }}
             transition={{ duration: 0.8 }}
           >
-            {subtitle && <p ref={subtitleRef} className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4">{subtitle}</p>}
+            {subtitle && <p ref={subtitleRef} className="text-xs sm:text-[10px] md:text-xs text-cyan-400 font-bold tracking-widest uppercase mb-4">{subtitle}</p>}
             <h2
               ref={titleRef}
-              className="text-3xl md:text-7xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block"
+              className="text-xl sm:text-2xl md:text-4xl lg:text-6xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block min-w-[80px]"
               style={{
                 backgroundSize: '0% 3px',
                 backgroundPosition: 'left bottom',
