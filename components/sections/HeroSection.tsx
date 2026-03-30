@@ -41,7 +41,7 @@ const HeroSection: React.FC = () => {
             className="logo-glow transition-all duration-700 ease-out group-hover:scale-105"
             style={{
               width: '100%',
-              maxWidth: '700px',
+              maxWidth: '600px',
               height: 'auto',
               objectFit: 'contain',
             }}
