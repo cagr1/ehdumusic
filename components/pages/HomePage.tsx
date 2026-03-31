@@ -24,7 +24,7 @@ const HomePage: React.FC = () => {
 
       {/* BIO SECTION */}
       <Section id="bio" subtitle={t.bio.subtitle} title={t.bio.title}>
-        <div className="max-w-3xl text-white/80 text-base md:text-lg leading-relaxed space-y-6 text-justify">
+        <div className="text-white/80 text-base md:text-lg leading-relaxed space-y-6 text-left">
           {(t.bio.body as string).split('\n\n').map((paragraph: string, index: number) => (
             <p key={index}>{paragraph}</p>
           ))}
@@ -38,34 +38,55 @@ const HomePage: React.FC = () => {
       <MediaSection />
 
       {/* CONTACT SECTION */}
-      <Section id="contact" subtitle={t.contact.subtitle} title={t.contact.title} reverseLayout={true} className="overflow-visible">
-        <div className="relative z-10 mt-12 grid grid-cols-1 md:grid-cols-2 gap-16">
-          <div className="md:order-2">
-            <div className="space-y-6 md:text-right">
-              <p className="text-white/60 text-xs md:text-sm uppercase tracking-wider mb-4">
+      <Section id="contact" subtitle={t.contact.subtitle} title={t.contact.title} className="overflow-visible">
+        <div className="relative z-10 mt-12 grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div>
+            <div className="space-y-4">
+              <p className="text-white/60 text-xs md:text-sm uppercase tracking-wider">
                 {language === 'es' 
-                  ? 'Disponible para eventos, festivales y bookings privados'
-                  : 'Available for events, festivals, and private bookings'}
+                  ? 'Disponible para clubes, festivales y eventos privados'
+                  : 'Available for clubs, festivals, and private events'}
               </p>
-              <div className="group">
-                <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-1">{t.contact.bookings}</p>
+              
+              {/* Primary CTA - WhatsApp */}
+              <div className="pt-2">
                 <a
-                  href="mailto:ledum1999@gmail.com?subject=Booking Inquiry - EHDUMUSIC&body=Hi, I want to book you for an event..."
+                  href={`https://wa.me/593998956080?text=${encodeURIComponent(language === 'es' ? 'Hola, quiero reservar para un evento!' : 'Hi, I want to book you for an event!')}`}
                   onClick={() => {
                     if (typeof window !== 'undefined' && (window as any).gtag) {
-                      (window as any).gtag('event', 'contact_cta_click', { event_category: 'conversion' });
+                      (window as any).gtag('event', 'whatsapp_booking_click', { event_category: 'conversion' });
                     }
-                    console.log('contact_cta_click');
+                    console.log('whatsapp_booking_click');
                   }}
-                  className="inline-block bg-cyan-400 text-black text-sm md:text-base font-bold uppercase tracking-wider px-8 py-3 md:px-10 md:py-4 hover:bg-cyan-300 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 bg-cyan-400 text-black text-sm md:text-base font-bold uppercase tracking-wider px-6 py-3 md:px-8 md:py-4 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30"
                 >
-                  {language === 'es' ? 'Enviar Solicitud de Booking' : 'Send Booking Request'}
+                  <Icon icon="logos:whatsapp-icon" width="20" height="20" />
+                  {language === 'es' ? 'Reservar por WhatsApp' : 'Book via WhatsApp'}
+                </a>
+              </div>
+              
+              {/* Secondary CTA - Email */}
+              <div className="pt-3">
+                <a
+                  href="mailto:ledum1999@gmail.com?subject=Booking Inquiry - EHDUMUSIC"
+                  onClick={() => {
+                    if (typeof window !== 'undefined' && (window as any).gtag) {
+                      (window as any).gtag('event', 'email_booking_click', { event_category: 'conversion' });
+                    }
+                    console.log('email_booking_click');
+                  }}
+                  className="text-white/40 text-xs md:text-sm uppercase tracking-wider hover:text-cyan-400 transition-colors underline decoration-1 underline-offset-4"
+                >
+                  {language === 'es' ? 'O enviar email' : 'Or send email'}
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col justify-end gap-8 md:order-1">
+          <div className="flex flex-col justify-end gap-6">
+            <p className="text-white/30 text-[10px] font-bold tracking-widest uppercase mb-2">
+              {language === 'es' ? 'Sígueme' : 'Follow'}
+            </p>
             <div className="grid grid-cols-4 sm:grid-cols-7 md:grid-cols-4 lg:grid-cols-7 gap-6 items-center">
               {socialLinks.map((link) => (
                 <a
@@ -91,3 +112,4 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+

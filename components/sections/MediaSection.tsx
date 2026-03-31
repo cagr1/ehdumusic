@@ -392,7 +392,7 @@ const MediaSection: React.FC = () => {
   }, []);
 
   return (
-    <section id="media" ref={containerRef} className="py-20 px-6 md:px-20 relative overflow-hidden">
+    <section id="media" ref={containerRef} className="py-20 px-6 md:px-20 relative overflow-visible">
       {/* Background gradient accent */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
       
@@ -403,7 +403,8 @@ const MediaSection: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
-            className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4"
+            className="text-cyan-400 text-[11px] sm:text-xs font-bold tracking-widest uppercase mb-4 leading-tight"
+            style={{ textShadow: 'none' }}
           >
             {t.media.subtitle}
           </motion.p>

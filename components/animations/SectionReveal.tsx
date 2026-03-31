@@ -21,6 +21,24 @@ const SectionReveal: React.FC<SectionRevealProps> = ({
     if (!wrapperRef.current) return;
 
     const ctx = gsap.context(() => {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (isMobile || reducedMotion) {
+        gsap.set(wrapperRef.current, {
+          clipPath: 'inset(0% 0% 0% 0% round 0px)',
+          opacity: 1,
+          y: 0,
+        });
+
+        const childNodes = wrapperRef.current.querySelectorAll('[data-reveal-item]');
+        if (childNodes.length) {
+          gsap.set(childNodes, { y: 0, opacity: 1, scale: 1 });
+        }
+
+        return;
+      }
+
       const revealFrom = direction === 'left'
         ? 'inset(0% 100% 0% 0% round 18px)'
         : 'inset(0% 0% 0% 100% round 18px)';

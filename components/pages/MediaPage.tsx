@@ -13,11 +13,11 @@ const MediaPage: React.FC = () => {
   return (
     <>
       {/* Videos Section */}
-      <section className="py-20 px-6 md:px-20 relative overflow-hidden">
+      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 relative overflow-hidden">
         {/* Background gradient accent */}
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
         
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto w-full">
           {/* Section Header */}
           <div className="mb-16 text-left">
             <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4">

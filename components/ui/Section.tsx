@@ -23,6 +23,23 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (isMobile || reducedMotion) {
+        if (titleRef.current) {
+          gsap.set(titleRef.current, {
+            opacity: 1,
+            x: 0,
+            backgroundSize: '100% 3px',
+          });
+        }
+        if (subtitleRef.current) {
+          gsap.set(subtitleRef.current, { opacity: 1, x: 0 });
+        }
+        return;
+      }
+
       // Title animation with direction based on layout
       if (titleRef.current) {
         const isRightAligned = reverseLayout;
@@ -94,7 +111,7 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
     <section
       ref={sectionRef}
       id={id}
-      className={`min-h-screen py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 flex flex-col justify-center relative overflow-hidden ${className}`}
+      className={`min-h-screen py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 flex flex-col justify-start md:justify-center relative overflow-visible ${className}`}
     >
       <SectionReveal className="max-w-7xl mx-auto w-full" direction={reverseLayout ? 'right' : 'left'}>
         {title && (
@@ -106,7 +123,15 @@ const Section: React.FC<SectionProps> = ({ children, id, className, title, subti
             viewport={{ once: false }}
             transition={{ duration: 0.8 }}
           >
-            {subtitle && <p ref={subtitleRef} className="text-xs sm:text-[10px] md:text-xs text-cyan-400 font-bold tracking-widest uppercase mb-4">{subtitle}</p>}
+            {subtitle && (
+              <p
+                ref={subtitleRef}
+                className="text-[11px] sm:text-xs md:text-xs text-cyan-400 font-bold tracking-widest uppercase mb-4 leading-tight"
+                style={{ textShadow: 'none' }}
+              >
+                {subtitle}
+              </p>
+            )}
             <h2
               ref={titleRef}
               className="text-lg sm:text-xl md:text-4xl lg:text-6xl font-black uppercase leading-tight bg-gradient-to-r from-white via-cyan-400 to-white bg-left bg-repeat-x transition-all inline-block min-w-[80px]"

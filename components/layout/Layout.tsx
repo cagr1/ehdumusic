@@ -38,12 +38,14 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
 
     updateLiteMode();
     
-    // Handle floating CTA visibility based on scroll position
+    // Handle floating CTA visibility based on scroll position (60-70% hero scroll)
     const handleScrollForCta = () => {
       const heroSection = document.getElementById('hero');
       if (heroSection) {
-        const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-        const shouldShow = window.scrollY > heroBottom - 100;
+        const heroTop = heroSection.offsetTop;
+        const heroHeight = heroSection.offsetHeight;
+        const triggerPoint = heroTop + (heroHeight * 0.65); // Show at 65% scroll
+        const shouldShow = window.scrollY > triggerPoint;
         setShowFloatingCta(shouldShow);
       }
     };
@@ -149,7 +151,6 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
       {showIntro && <IntroAnimation />}
       {!isLiteMode && <DynamicBackground />}
       {!isLiteMode && <CustomCursor />}
-      <LanguageSwitcher />
       {!isLiteMode && <div className="noise-overlay" />}
 
       {/* Sticky Navigation */}
@@ -189,13 +190,18 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
             ))}
           </div>
 
-          <button
-            className="md:hidden z-50 relative"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
+            <button
+              className="md:hidden z-50 relative"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -229,7 +235,10 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
                 </motion.div>
               ))}
             </div>
-            <div className="grid grid-cols-4 gap-4 mt-8">
+            <div className="flex justify-center gap-4 mb-8">
+              <LanguageSwitcher />
+            </div>
+            <div className="grid grid-cols-4 gap-4 mt-2">
               {socialLinks.map((link, idx) => (
                 <motion.a
                   key={link.name}
@@ -269,21 +278,27 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
       </main>
 
       {/* Persistent Floating CTA - Book Button - Only shows when scrolled past hero */}
-      {showFloatingCta && (
-        <a
-          href="#contact"
-          onClick={() => {
-            if (typeof window !== 'undefined' && (window as any).gtag) {
-              (window as any).gtag('event', 'floating_cta_click', { event_category: 'conversion' });
-            }
-            console.log('floating_cta_click');
-          }}
-          className="fixed bottom-[5.5rem] right-4 sm:bottom-6 sm:right-6 z-40 bg-cyan-400 text-black text-sm font-bold uppercase tracking-wider px-4 py-2.5 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30 border border-cyan-300/50 md:hidden"
-          aria-label="Book Now"
-        >
-          {language === 'es' ? 'Booking' : 'Book'}
-        </a>
-      )}
+      <AnimatePresence>
+        {showFloatingCta && (
+          <motion.a
+            href="#contact"
+            onClick={() => {
+              if (typeof window !== 'undefined' && (window as any).gtag) {
+                (window as any).gtag('event', 'floating_cta_click', { event_category: 'conversion' });
+              }
+              console.log('floating_cta_click');
+            }}
+            initial={{ opacity: 0, y: 20, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.8 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className="fixed bottom-[5.5rem] right-4 sm:bottom-6 sm:right-6 z-40 bg-cyan-400 text-black text-sm font-bold uppercase tracking-wider px-4 py-2.5 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30 border border-cyan-300/50 md:hidden"
+            aria-label="Book Now"
+          >
+            {language === 'es' ? 'Reservas' : 'Bookings'}
+          </motion.a>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

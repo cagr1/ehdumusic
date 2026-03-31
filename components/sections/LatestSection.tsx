@@ -134,12 +134,13 @@ const LatestSection: React.FC = () => {
   ];
 
   return (
-    <section id="latest" ref={sectionRef} className="py-20 px-6 md:px-20 relative overflow-hidden">
-      <div className="relative z-10 max-w-7xl mx-auto">
+    <section id="latest" ref={sectionRef} className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 relative overflow-visible">
+      <div className="relative z-10 max-w-7xl mx-auto w-full">
         <div className="mb-16">
           <p
             ref={subtitleRef}
-            className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-4"
+            className="text-cyan-400 text-[11px] sm:text-xs font-bold tracking-widest uppercase mb-4 leading-tight"
+            style={{ textShadow: 'none' }}
           >
             {t.latest.subtitle}
           </p>
