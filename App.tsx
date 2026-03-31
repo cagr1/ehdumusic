@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/react';
 import { SmoothScroll } from './components/animations';
 import Layout from './components/layout/Layout';
 import { HomePage, GalleryPage, MediaPage, BioPage } from './components/pages';
@@ -48,7 +49,9 @@ const AppContent: React.FC = () => {
   const isLiteMode = useLiteMode();
 
   return (
-    <Router>
+    <>
+      <Analytics />
+      <Router>
       <ScrollToTop />
       <SmoothScroll>
         <AnimatePresence mode="wait">
@@ -95,6 +98,7 @@ const AppContent: React.FC = () => {
         </AnimatePresence>
       </SmoothScroll>
     </Router>
+    </>
   );
 };
 
