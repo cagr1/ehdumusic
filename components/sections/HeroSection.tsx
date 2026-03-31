@@ -6,7 +6,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 const LOGO_IMAGE = "images/logohero.png";
 
 const HeroSection: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -76,6 +76,46 @@ const HeroSection: React.FC = () => {
           >
             {t.hero.subtitle}
           </motion.h2>
+          
+          {/* Primary CTA - Book Now */}
+          <motion.a
+            href="#contact"
+            onClick={() => {
+              // Track hero CTA click
+              if (typeof window !== 'undefined' && (window as any).gtag) {
+                (window as any).gtag('event', 'hero_cta_click', { event_category: 'conversion' });
+              }
+              console.log('hero_cta_click');
+            }}
+            className="inline-block bg-cyan-400 text-black text-xs sm:text-sm font-bold uppercase tracking-wider px-6 sm:px-8 py-2.5 sm:py-3 md:px-10 md:py-4 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30 border border-cyan-300/50"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.6 }}
+          >
+            {language === 'es' ? 'Reservar Ahora' : 'Book Now'}
+          </motion.a>
+          
+          {/* Secondary CTA - Listen on Spotify */}
+          <motion.a
+            href="https://open.spotify.com/artist/5gKvdLCO9jxUgCqWNnpd4o"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              if (typeof window !== 'undefined' && (window as any).gtag) {
+                (window as any).gtag('event', 'spotify_click', { event_category: 'engagement' });
+              }
+              console.log('spotify_click');
+            }}
+            className="inline-block ml-2 sm:ml-4 md:ml-6 text-[10px] sm:text-xs md:text-sm text-white/60 uppercase tracking-wider px-3 sm:px-4 py-2 rounded-full border border-white/20 hover:border-cyan-400/50 hover:text-cyan-400 hover:bg-cyan-400/10 transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+          >
+            {language === 'es' ? 'Escuchar en Spotify' : 'Listen on Spotify'}
+          </motion.a>
         </motion.div>
       </motion.div>
 

@@ -18,7 +18,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode = false }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const { scrollTo } = useSmoothScroll();
@@ -251,6 +251,21 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Persistent Floating CTA - Book Button */}
+      <a
+        href="#contact"
+        onClick={() => {
+          if (typeof window !== 'undefined' && (window as any).gtag) {
+            (window as any).gtag('event', 'floating_cta_click', { event_category: 'conversion' });
+          }
+          console.log('floating_cta_click');
+        }}
+        className="fixed bottom-[5.5rem] right-4 sm:bottom-6 sm:right-6 z-40 bg-cyan-400 text-black text-sm font-bold uppercase tracking-wider px-4 py-2.5 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30 border border-cyan-300/50 md:hidden"
+        aria-label="Book Now"
+      >
+        {language === 'es' ? 'Booking' : 'Book'}
+      </a>
     </div>
   );
 };

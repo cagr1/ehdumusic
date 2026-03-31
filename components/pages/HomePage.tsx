@@ -5,7 +5,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { Icon } from '@iconify/react';
 
 const HomePage: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const socialLinks = [
     { name: 'Beatport', icon: 'simple-icons:beatport', url: 'https://www.beatport.com/artist/ehdu/928516' },
@@ -42,13 +42,24 @@ const HomePage: React.FC = () => {
         <div className="relative z-10 mt-12 grid grid-cols-1 md:grid-cols-2 gap-16">
           <div className="md:order-2">
             <div className="space-y-6 md:text-right">
+              <p className="text-white/60 text-xs md:text-sm uppercase tracking-wider mb-4">
+                {language === 'es' 
+                  ? 'Disponible para eventos, festivales y bookings privados'
+                  : 'Available for events, festivals, and private bookings'}
+              </p>
               <div className="group">
                 <p className="text-cyan-400 text-[10px] font-bold tracking-widest uppercase mb-1">{t.contact.bookings}</p>
                 <a
-                  href="mailto:ledum1999@gmail.com"
-                  className="text-2xl md:text-3xl font-bold transition-all cursor-pointer inline-block text-white hover:text-cyan-400"
+                  href="mailto:ledum1999@gmail.com?subject=Booking Inquiry - EHDUMUSIC&body=Hi, I want to book you for an event..."
+                  onClick={() => {
+                    if (typeof window !== 'undefined' && (window as any).gtag) {
+                      (window as any).gtag('event', 'contact_cta_click', { event_category: 'conversion' });
+                    }
+                    console.log('contact_cta_click');
+                  }}
+                  className="inline-block bg-cyan-400 text-black text-sm md:text-base font-bold uppercase tracking-wider px-8 py-3 md:px-10 md:py-4 hover:bg-cyan-300 transition-colors cursor-pointer"
                 >
-                  booking
+                  {language === 'es' ? 'Enviar Solicitud de Booking' : 'Send Booking Request'}
                 </a>
               </div>
             </div>
