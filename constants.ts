@@ -95,4 +95,5 @@ export const PHOTO_GALLERY: PhotoItem[] = [
   { id: 'p6', src: '/Cover/gallery6.webp', alt: 'EHDU event', caption: 'Event' },
   { id: 'p7', src: '/Cover/gallery7.webp', alt: 'EHDU performance', caption: 'Performance' },
   { id: 'p8', src: '/Cover/gallery8.webp', alt: 'EHDU show', caption: 'Show' },
+  { id: 'p9', src: '/Cover/gallery9.webp', alt: 'EHDU ', caption: 'Music Production' },
 ];

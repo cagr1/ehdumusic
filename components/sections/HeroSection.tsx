@@ -4,7 +4,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 
 // Hero images
 const LOGO_IMAGE = "images/logohero.png";
-const HERO_BG_IMAGE = "Cover/gallery2.webp";
+const HERO_BG_IMAGE = "Cover/gallery6.webp";
 
 
 const HeroSection: React.FC = () => {
@@ -42,13 +42,14 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, scale: 0.95, filter: 'blur(15px)' }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="relative group cursor-pointer w-full flex justify-center -translate-y-12 sm:-translate-y-14 md:-translate-y-16 lg:-translate-y-20 lg:-translate-x-12"
+          className="relative w-full"
         >
           {/* Logo – responsive sizing that matches the intro loader logo */}
+          <div className="w-full flex justify-center -mt-10 sm:-mt-16 md:-mt-20 lg:-mt-28 xl:-mt-32 mb-12 sm:mb-16 md:mb-20 lg:mb-28 xl:mb-32">
           <img
             src={LOGO_IMAGE}
             alt="EHDU - Melodic Techno Artist Logo"
-            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105 drop-shadow-[0_20px_60px_rgba(0,0,0,0.65)] w-full max-w-[600px] lg:max-w-[520px]"
+            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105 drop-shadow-[0_20px_60px_rgba(0,0,0,0.65)] w-full max-w-[220px] lg:max-w-[320px]"
             style={{
               height: 'auto',
               objectFit: 'contain',
@@ -56,6 +57,7 @@ const HeroSection: React.FC = () => {
             loading="eager"
             fetchPriority="high"
           />
+          </div>
         </motion.div>
         
         {/* Separator Bar - separates Too Many Rules | Polyptych */}
@@ -63,7 +65,7 @@ const HeroSection: React.FC = () => {
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
-          className="h-px w-full max-w-xl mt-2 mb-6"
+          className="h-px w-full max-w-xl mt-14 mb-1"
           style={{
             background: 'linear-gradient(90deg, transparent, #00F0FF 20%, #00F0FF 80%, transparent)',
             boxShadow: '0 0 10px #00F0FF, 0 0 20px rgba(0, 240, 255, 0.5)',
@@ -95,7 +97,7 @@ const HeroSection: React.FC = () => {
               }
               console.log('hero_booking_click');
             }}
-            className="inline-block bg-cyan-400 text-black text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider px-6 sm:px-8 py-2.5 sm:py-3 md:px-10 md:py-4 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30 border border-cyan-300/50"
+            className="inline-block bg-cyan-400 text-black text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-wider px-4 sm:px-5 md:px-7 py-2 sm:py-2.5 md:py-3 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30 border border-cyan-300/50"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
@@ -116,7 +118,7 @@ const HeroSection: React.FC = () => {
               }
               console.log('listen_click');
             }}
-            className="inline-block ml-2 sm:ml-4 md:ml-6 mt-3 sm:mt-0 text-[10px] sm:text-xs md:text-sm text-white/40 uppercase tracking-wider px-3 sm:px-4 py-2 rounded-full border border-white/10 hover:border-cyan-400/30 hover:text-cyan-400/60 transition-all duration-300"
+            className="inline-block ml-2 sm:ml-3 md:ml-4 mt-3 sm:mt-0 text-[9px] sm:text-[10px] md:text-xs text-white/40 uppercase tracking-wider px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/10 hover:border-cyan-400/30 hover:text-cyan-400/60 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
