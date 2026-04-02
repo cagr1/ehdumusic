@@ -4,7 +4,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 
 // Hero images
 const LOGO_IMAGE = "images/logohero.png";
-const HERO_BG_IMAGE = "Cover/AfterlightImage.JPG";
+const HERO_BG_IMAGE = "Cover/AfterlightImage.webp";
 
 
 const HeroSection: React.FC = () => {
