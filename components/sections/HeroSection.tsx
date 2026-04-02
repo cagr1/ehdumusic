@@ -4,7 +4,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 
 // Hero images
 const LOGO_IMAGE = "images/logohero.png";
-const HERO_BG_IMAGE = "Cover/AfterlightImage.webp";
+const HERO_BG_IMAGE = "Cover/gallery2.webp";
 
 
 const HeroSection: React.FC = () => {
@@ -26,7 +26,7 @@ const HeroSection: React.FC = () => {
       <motion.img
         src={HERO_BG_IMAGE}
         alt="EHDU live set"
-        className="absolute inset-0 z-0 h-full w-full object-cover object-[30%_35%] sm:object-[35%_30%] md:object-[50%_30%]"
+        className="absolute inset-0 z-0 h-full w-full object-cover object-[20%_40%] sm:object-[30%_38%] md:object-[55%_30%] lg:object-[65%_30%]"
         style={{ opacity: bgOpacity }}
         loading="eager"
         fetchPriority="high"
@@ -36,22 +36,20 @@ const HeroSection: React.FC = () => {
       
       <motion.div 
         style={{ y: logoY, scale: logoScale, opacity: logoOpacity }}
-        className="relative z-10 w-full px-4 md:px-12 flex flex-col items-center"
+        className="relative z-10 w-full px-4 md:px-12 flex flex-col items-center pt-4 sm:pt-6 md:pt-8"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, filter: 'blur(15px)' }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="relative group cursor-pointer w-full flex justify-center"
+          className="relative group cursor-pointer w-full flex justify-center -translate-y-12 sm:-translate-y-14 md:-translate-y-16 lg:-translate-y-20 lg:-translate-x-12"
         >
           {/* Logo – responsive sizing that matches the intro loader logo */}
           <img
             src={LOGO_IMAGE}
             alt="EHDU - Melodic Techno Artist Logo"
-            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105 drop-shadow-[0_20px_60px_rgba(0,0,0,0.65)]"
+            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105 drop-shadow-[0_20px_60px_rgba(0,0,0,0.65)] w-full max-w-[600px] lg:max-w-[520px]"
             style={{
-              width: '100%',
-              maxWidth: '650px',
               height: 'auto',
               objectFit: 'contain',
             }}
