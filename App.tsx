@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
 import { SmoothScroll } from './components/animations';
 import Layout from './components/layout/Layout';
-import { HomePage, GalleryPage, MediaPage, BioPage } from './components/pages';
+import { HomePage, GalleryPage, MediaPage, BioPage, ContactPage } from './components/pages';
 
 // Scroll to top component
 const ScrollToTop: React.FC = () => {
@@ -85,6 +85,14 @@ const AppContent: React.FC = () => {
               element={
                 <Layout showIntro={false} isLiteMode={isLiteMode}>
                   <BioPage />
+                </Layout>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <Layout showIntro={false} isLiteMode={isLiteMode}>
+                  <ContactPage />
                 </Layout>
               }
             />

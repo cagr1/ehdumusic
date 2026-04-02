@@ -12,7 +12,7 @@ export const translations = {
     },
     latest: {
       title: 'Musica',
-      subtitle: 'Nuevos Sonidos',
+      subtitle: 'Nueva Musica',
       platforms: 'Escucha en',
     },
     media: {
@@ -59,7 +59,7 @@ Con releases en Too Many Rules, Polyptych, Savia Park, Bigbells Records y Dirty 
     },
     latest: {
       title: 'Music',
-      subtitle: 'New Sounds',
+      subtitle: 'New Music',
       platforms: 'Listen on',
     },
     media: {

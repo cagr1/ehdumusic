@@ -101,7 +101,7 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
     { name: t.nav.media, path: '/#media' },
     { name: t.nav.bio, path: '/bio' },
     { name: t.nav.gallery, path: '/gallery' },
-    { name: t.nav.contact, path: '/#contact' },
+    { name: t.nav.contact, path: '/contact' },
   ], [t.nav.latest, t.nav.media, t.nav.bio, t.nav.gallery, t.nav.contact]);
 
   const isActive = (path: string) => {
@@ -281,7 +281,7 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
       <AnimatePresence>
         {showFloatingCta && (
           <motion.a
-            href="#contact"
+            href="/contact"
             onClick={() => {
               if (typeof window !== 'undefined' && (window as any).gtag) {
                 (window as any).gtag('event', 'floating_cta_click', { event_category: 'conversion' });
@@ -292,8 +292,8 @@ const Layout: React.FC<LayoutProps> = ({ children, showIntro = true, isLiteMode 
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.8 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed bottom-[5.5rem] right-4 sm:bottom-6 sm:right-6 z-40 bg-cyan-400 text-black text-sm font-bold uppercase tracking-wider px-4 py-2.5 rounded-md hover:rounded-full hover:bg-cyan-300 transition-all duration-300 cursor-pointer shadow-lg shadow-cyan-400/30 border border-cyan-300/50 md:hidden"
-            aria-label="Book Now"
+            className="fixed bottom-6 right-4 sm:right-6 z-40 text-[10px] sm:text-xs font-bold uppercase tracking-[0.35em] px-4 py-2 rounded-full border border-white/20 text-white/80 bg-black/30 backdrop-blur-md hover:border-cyan-400/60 hover:text-white hover:bg-black/50 transition-all duration-300"
+            aria-label="Bookings"
           >
             {language === 'es' ? 'Reservas' : 'Bookings'}
           </motion.a>

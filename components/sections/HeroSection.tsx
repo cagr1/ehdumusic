@@ -2,8 +2,10 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../../i18n/LanguageContext';
 
-// Hero logo image
+// Hero images
 const LOGO_IMAGE = "images/logohero.png";
+const HERO_BG_IMAGE = "Cover/AfterlightImage.JPG";
+
 
 const HeroSection: React.FC = () => {
   const { t, language } = useLanguage();
@@ -21,8 +23,16 @@ const HeroSection: React.FC = () => {
 
   return (
     <section id="hero" ref={heroRef} className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
-      <motion.div style={{ opacity: bgOpacity }} className="absolute inset-0 z-0 bg-gradient-to-b from-purple-900/20 to-black">
-      </motion.div>
+      <motion.img
+        src={HERO_BG_IMAGE}
+        alt="EHDU live set"
+        className="absolute inset-0 z-0 h-full w-full object-cover object-[30%_35%] sm:object-[35%_30%] md:object-[50%_30%]"
+        style={{ opacity: bgOpacity }}
+        loading="eager"
+        fetchPriority="high"
+      />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/45 via-black/35 to-black/75" />
+      <div className="absolute inset-0 z-[1] bg-[radial-gradient(circle_at_20%_20%,rgba(0,240,255,0.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(139,0,255,0.22),transparent_50%)]" />
       
       <motion.div 
         style={{ y: logoY, scale: logoScale, opacity: logoOpacity }}
@@ -38,10 +48,10 @@ const HeroSection: React.FC = () => {
           <img
             src={LOGO_IMAGE}
             alt="EHDU - Melodic Techno Artist Logo"
-            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105"
+            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105 drop-shadow-[0_20px_60px_rgba(0,0,0,0.65)]"
             style={{
               width: '100%',
-              maxWidth: '600px',
+              maxWidth: '650px',
               height: 'auto',
               objectFit: 'contain',
             }}
@@ -79,7 +89,7 @@ const HeroSection: React.FC = () => {
           
           {/* Primary CTA - Book for Events */}
           <motion.a
-            href="#contact"
+            href="/contact"
             onClick={() => {
               // Track hero CTA click
               if (typeof window !== 'undefined' && (window as any).gtag) {
