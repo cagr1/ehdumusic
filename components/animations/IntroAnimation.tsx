@@ -2,14 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 const IMAGES = [
-  '/Cover/loader1.webp',
-  '/Cover/loader8.webp',
-  '/Cover/loader4.webp',
-  '/Cover/loader5.webp',
-  '/Cover/loader6.webp',
-  '/Cover/loader7.webp',
-  '/Cover/loader3.webp',
-  '/Cover/loader2.webp',
+  '/Intro/Intro1.webp',
+  '/Intro/Intro2.webp',
+  '/Intro/Intro3.webp',
+  '/Intro/Intro4.webp',
+  '/Intro/Intro5.webp',
+  '/Intro/Intro6.webp'  
 ];
 
 const CARD_HOLD = 0.12;
@@ -145,6 +143,7 @@ const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) => {
             borderRadius: '10px',
             opacity: 0,
             boxShadow: '0 28px 72px rgba(0,0,0,0.85)',
+            filter: 'grayscale(100%)',
             transformStyle: 'preserve-3d',
             zIndex: 4,
           }}

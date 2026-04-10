@@ -96,4 +96,13 @@ export const PHOTO_GALLERY: PhotoItem[] = [
   { id: 'p7', src: '/Cover/gallery7.webp', alt: 'EHDU performance', caption: 'Performance' },
   { id: 'p8', src: '/Cover/gallery8.webp', alt: 'EHDU show', caption: 'Show' },
   { id: 'p9', src: '/Cover/gallery9.webp', alt: 'EHDU ', caption: 'Music Production' },
+  { id: 'p10', src: '/Cover/gallery10.webp', alt: 'EHDU ', caption: 'Live Set' },
+  { id: 'p11', src: '/Cover/gallery11.webp', alt: 'EHDU ', caption: 'Event' },
+  { id: 'p12', src: '/Cover/gallery12.webp', alt: 'EHDU ', caption: 'Party' },
+  { id: 'p13', src: '/Cover/gallery13.webp', alt: 'EHDU ', caption: 'Show' },
+  { id: 'p14', src: '/Cover/gallery14.webp', alt: 'EHDU ', caption: 'Concert' },
+  { id: 'p15', src: '/Cover/gallery15.webp', alt: 'EHDU ', caption: 'Studio Session' },
+  { id: 'p16', src: '/Cover/gallery16.webp', alt: 'EHDU ', caption: 'Live Performance' },
+  { id: 'p17', src: '/Cover/gallery17.webp', alt: 'EHDU ', caption: 'Festival' }
+  
 ];
