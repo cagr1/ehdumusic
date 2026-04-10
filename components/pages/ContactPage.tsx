@@ -41,7 +41,7 @@ const ContactPage: React.FC = () => {
             </a>
 
             <a
-              href="mailto:ledum1999@gmail.com?subject=Booking Inquiry - EHDUMUSIC"
+              href="mailto:booking@ehdumusic.com?subject=Booking Inquiry - EHDUMUSIC"
               onClick={() => {
                 if (typeof window !== 'undefined' && (window as any).gtag) {
                   (window as any).gtag('event', 'email_booking_click', { event_category: 'conversion' });
@@ -91,7 +91,7 @@ const ContactPage: React.FC = () => {
               const body = encodeURIComponent(
                 `Name: ${name}\nEmail: ${email}\nEvent Type: ${eventType}\nDate: ${date}\n\nMessage:\n${message}`
               );
-              window.location.href = `mailto:ledum1999@gmail.com?subject=${subject}&body=${body}`;
+              window.location.href = `mailto:booking@ehdumusic.com?subject=${subject}&body=${body}`;
             }}
           >
             <input
