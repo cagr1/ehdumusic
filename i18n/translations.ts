@@ -12,11 +12,11 @@ export const translations = {
     },
     latest: {
       title: 'Musica',
-      subtitle: 'Nueva Musica',
+      subtitle: 'Discografia',
       platforms: 'Escucha en',
     },
     media: {
-      subtitle: 'Ecos Visuales',
+      subtitle: 'DJ Sets',
       title: 'Galeria',
       photos: 'Fotos',
       performance: 'Presentacion',
@@ -59,11 +59,11 @@ Con releases en Too Many Rules, Polyptych, Savia Park, Bigbells Records y Dirty 
     },
     latest: {
       title: 'Music',
-      subtitle: 'New Music',
+      subtitle: 'Discography',
       platforms: 'Listen on',
     },
     media: {
-      subtitle: 'Visual Echoes',
+      subtitle: 'DJ Sets',
       title: 'Gallery',
       photos: 'Photos',
       performance: 'Performance',

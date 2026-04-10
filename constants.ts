@@ -58,7 +58,7 @@ export const MEDIA_GALLERY: MediaItem[] = [
     description: 'EHDU B2B ENCALADA LIVE AT NUIT',
     url: 'https://www.youtube.com/embed/6uz0PjRR__0',
     thumbnail: 'https://img.youtube.com/vi/6uz0PjRR__0/maxresdefault.jpg',
-    duration: '5:30',
+    duration: '1:21:36',
     featured: false,
   },
   {
@@ -69,7 +69,7 @@ export const MEDIA_GALLERY: MediaItem[] = [
     description: 'Habla Banana Session 001',
     url: 'https://www.youtube.com/embed/LpxUD7JvjwQ',
     thumbnail: 'https://img.youtube.com/vi/LpxUD7JvjwQ/maxresdefault.jpg',
-    duration: '',
+    duration: '1:02:02',
     featured: false,
   },
   {
@@ -80,29 +80,29 @@ export const MEDIA_GALLERY: MediaItem[] = [
     description: 'Sunset Live Session 2 - Ehdu',
     url: 'https://www.youtube.com/embed/1OR827rZ0RY',
     thumbnail: 'https://img.youtube.com/vi/1OR827rZ0RY/maxresdefault.jpg',
-    duration: '',
+    duration: '45:48',
     featured: false,
   },
 ];
 
 // Galería de fotos del artista - Using gallery images from Cover folder
 export const PHOTO_GALLERY: PhotoItem[] = [
-  { id: 'p1', src: '/Cover/gallery1.webp', alt: 'EHDU live performance', caption: 'Live Performance' },
-  { id: 'p2', src: '/Cover/gallery2.webp', alt: 'EHDU studio session', caption: 'Studio Session' },
-  { id: 'p3', src: '/Cover/gallery3.webp', alt: 'EHDU backstage moments', caption: 'Behind the Scenes' },
-  { id: 'p4', src: '/Cover/gallery4.webp', alt: 'EHDU at festival', caption: 'Festival' },
-  { id: 'p5', src: '/Cover/gallery5.webp', alt: 'EHDU concert', caption: 'Concert' },
-  { id: 'p6', src: '/Cover/gallery6.webp', alt: 'EHDU event', caption: 'Event' },
-  { id: 'p7', src: '/Cover/gallery7.webp', alt: 'EHDU performance', caption: 'Performance' },
-  { id: 'p8', src: '/Cover/gallery8.webp', alt: 'EHDU show', caption: 'Show' },
-  { id: 'p9', src: '/Cover/gallery9.webp', alt: 'EHDU ', caption: 'Music Production' },
-  { id: 'p10', src: '/Cover/gallery10.webp', alt: 'EHDU ', caption: 'Live Set' },
-  { id: 'p11', src: '/Cover/gallery11.webp', alt: 'EHDU ', caption: 'Event' },
-  { id: 'p12', src: '/Cover/gallery12.webp', alt: 'EHDU ', caption: 'Party' },
-  { id: 'p13', src: '/Cover/gallery13.webp', alt: 'EHDU ', caption: 'Show' },
-  { id: 'p14', src: '/Cover/gallery14.webp', alt: 'EHDU ', caption: 'Concert' },
-  { id: 'p15', src: '/Cover/gallery15.webp', alt: 'EHDU ', caption: 'Studio Session' },
-  { id: 'p16', src: '/Cover/gallery16.webp', alt: 'EHDU ', caption: 'Live Performance' },
-  { id: 'p17', src: '/Cover/gallery17.webp', alt: 'EHDU ', caption: 'Festival' }
+  { id: 'p1', src: '/Cover/gallery1.webp', alt: 'EHDU live performance' },
+  { id: 'p2', src: '/Cover/gallery2.webp', alt: 'EHDU studio session'},
+  { id: 'p3', src: '/Cover/gallery3.webp', alt: 'EHDU backstage moments'},
+  { id: 'p4', src: '/Cover/gallery4.webp', alt: 'EHDU at festival'},
+  { id: 'p5', src: '/Cover/gallery5.webp', alt: 'EHDU concert' },
+  { id: 'p6', src: '/Cover/gallery6.webp', alt: 'EHDU event'},
+  { id: 'p7', src: '/Cover/gallery7.webp', alt: 'EHDU performance' },
+  { id: 'p8', src: '/Cover/gallery8.webp', alt: 'EHDU show'},
+  { id: 'p9', src: '/Cover/gallery9.webp', alt: 'EHDU '},
+  { id: 'p10', src: '/Cover/gallery10.webp', alt: 'EHDU '},
+  { id: 'p11', src: '/Cover/gallery11.webp', alt: 'EHDU '},
+  { id: 'p12', src: '/Cover/gallery12.webp', alt: 'EHDU '},
+  { id: 'p13', src: '/Cover/gallery13.webp', alt: 'EHDU '},
+  { id: 'p14', src: '/Cover/gallery14.webp', alt: 'EHDU '},
+  { id: 'p15', src: '/Cover/gallery15.webp', alt: 'EHDU ' },
+  { id: 'p16', src: '/Cover/gallery16.webp', alt: 'EHDU '},
+  { id: 'p17', src: '/Cover/gallery17.webp', alt: 'EHDU '}
   
 ];

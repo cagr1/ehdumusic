@@ -28,7 +28,7 @@ const ContactPage: React.FC = () => {
 
           <div className="space-y-3">
             <a
-              href={`https://wa.me/593998956080?text=${encodeURIComponent(language === 'es' ? 'Hola, quiero reservar para un evento!' : 'Hi, I want to book you for an event!')}`}
+              href={`https://wa.me/593980675071?text=${encodeURIComponent(language === 'es' ? 'Hola, quiero reservar para un evento!' : 'Hi, I want to book you for an event!')}`}
               onClick={() => {
                 if (typeof window !== 'undefined' && (window as any).gtag) {
                   (window as any).gtag('event', 'whatsapp_booking_click', { event_category: 'conversion' });
