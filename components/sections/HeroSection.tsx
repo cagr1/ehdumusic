@@ -64,7 +64,7 @@ const HeroSection: React.FC = () => {
     <section id="hero" ref={heroRef} className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
       <motion.video
         ref={videoRef}
-        className="absolute inset-0 z-0 h-full w-full object-cover object-[20%_40%] sm:object-[30%_38%] md:object-[55%_30%] lg:object-[65%_30%]"
+        className="absolute inset-0 z-0 h-full w-full object-cover object-[50%_35%] sm:object-[35%_36%] md:object-[55%_30%] lg:object-[65%_30%]"
         style={{ opacity: bgOpacity }}
         autoPlay
         muted
