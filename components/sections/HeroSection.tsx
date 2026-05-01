@@ -4,7 +4,8 @@ import { useLanguage } from '../../i18n/LanguageContext';
 
 // Hero images
 const LOGO_IMAGE = "images/logohero.png";
-const HERO_BG_IMAGE = "Cover/gallery6.webp";
+const HERO_BG_VIDEO = "EHDU VIDEO LOOP WEB.mp4";
+const HERO_BG_POSTER = "Cover/gallery6.webp";
 
 
 const HeroSection: React.FC = () => {
@@ -23,14 +24,18 @@ const HeroSection: React.FC = () => {
 
   return (
     <section id="hero" ref={heroRef} className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
-      <motion.img
-        src={HERO_BG_IMAGE}
-        alt="EHDU live set"
+      <motion.video
         className="absolute inset-0 z-0 h-full w-full object-cover object-[20%_40%] sm:object-[30%_38%] md:object-[55%_30%] lg:object-[65%_30%]"
         style={{ opacity: bgOpacity }}
-        loading="eager"
-        fetchPriority="high"
-      />
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        poster={HERO_BG_POSTER}
+      >
+        <source src={HERO_BG_VIDEO} type="video/mp4" />
+      </motion.video>
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/45 via-black/35 to-black/75" />
       <div className="absolute inset-0 z-[1] bg-[radial-gradient(circle_at_20%_20%,rgba(0,240,255,0.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(139,0,255,0.22),transparent_50%)]" />
       
@@ -49,7 +54,7 @@ const HeroSection: React.FC = () => {
           <img
             src={LOGO_IMAGE}
             alt="EHDU - Melodic Techno Artist Logo"
-            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105 drop-shadow-[0_20px_60px_rgba(0,0,0,0.65)] w-full max-w-[220px] lg:max-w-[320px]"
+            className="logo-glow transition-all duration-700 ease-out group-hover:scale-105 drop-shadow-[0_20px_60px_rgba(0,0,0,0.65)] w-full max-w-[220px] lg:max-w-[450px]"
             style={{
               height: 'auto',
               objectFit: 'contain',

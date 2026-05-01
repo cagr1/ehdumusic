@@ -17,7 +17,7 @@ export const translations = {
     },
     media: {
       subtitle: 'DJ Sets',
-      title: 'Galeria',
+      title: 'Media',
       photos: 'Fotos',
       performance: 'Presentacion',
       watch: 'Ver Video',
@@ -64,7 +64,7 @@ Con releases en Too Many Rules, Polyptych, Savia Park, Bigbells Records y Dirty 
     },
     media: {
       subtitle: 'DJ Sets',
-      title: 'Gallery',
+      title: 'Media',
       photos: 'Photos',
       performance: 'Performance',
       watch: 'Watch Video',
