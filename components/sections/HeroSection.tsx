@@ -1,16 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../../i18n/LanguageContext';
 
 // Hero images
 const LOGO_IMAGE = "images/logohero.png";
 const HERO_BG_VIDEO = "EHDU VIDEO LOOP WEB.mp4";
+const HERO_BG_VIDEO_MOBILE = "EHDU VIDEO LOOP WEB.mobile.mp4";
 const HERO_BG_POSTER = "Cover/gallery6.webp";
 
 
 const HeroSection: React.FC = () => {
   const { t, language } = useLanguage();
   const heroRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -22,18 +24,48 @@ const HeroSection: React.FC = () => {
   const logoOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const bgOpacity = useTransform(scrollYProgress, [0, 0.6], [0.4, 0]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Improve autoplay reliability on iOS/Safari mobile.
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
+
+    const tryPlay = () => {
+      video.play().catch(() => {
+        // If autoplay is blocked, poster remains visible.
+      });
+    };
+
+    tryPlay();
+    document.addEventListener('visibilitychange', tryPlay);
+    return () => document.removeEventListener('visibilitychange', tryPlay);
+  }, []);
+
   return (
     <section id="hero" ref={heroRef} className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
       <motion.video
+        ref={videoRef}
         className="absolute inset-0 z-0 h-full w-full object-cover object-[20%_40%] sm:object-[30%_38%] md:object-[55%_30%] lg:object-[65%_30%]"
         style={{ opacity: bgOpacity }}
         autoPlay
         muted
+        defaultMuted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
         poster={HERO_BG_POSTER}
       >
+        <source
+          src={HERO_BG_VIDEO_MOBILE}
+          type="video/mp4"
+          media="(max-width: 768px)"
+        />
         <source src={HERO_BG_VIDEO} type="video/mp4" />
       </motion.video>
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/45 via-black/35 to-black/75" />
