@@ -28,6 +28,13 @@ const HeroSection: React.FC = () => {
     const video = videoRef.current;
     if (!video) return;
 
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    const selectedSrc = mobileQuery.matches ? HERO_BG_VIDEO_MOBILE : HERO_BG_VIDEO;
+    if (!video.currentSrc || !video.currentSrc.includes(selectedSrc)) {
+      video.src = selectedSrc;
+      video.load();
+    }
+
     // Improve autoplay reliability on iOS/Safari mobile.
     video.muted = true;
     video.defaultMuted = true;
@@ -43,8 +50,14 @@ const HeroSection: React.FC = () => {
     };
 
     tryPlay();
+    window.addEventListener('touchstart', tryPlay, { passive: true });
+    window.addEventListener('click', tryPlay);
     document.addEventListener('visibilitychange', tryPlay);
-    return () => document.removeEventListener('visibilitychange', tryPlay);
+    return () => {
+      window.removeEventListener('touchstart', tryPlay);
+      window.removeEventListener('click', tryPlay);
+      document.removeEventListener('visibilitychange', tryPlay);
+    };
   }, []);
 
   return (
@@ -60,14 +73,7 @@ const HeroSection: React.FC = () => {
         playsInline
         preload="auto"
         poster={HERO_BG_POSTER}
-      >
-        <source
-          src={HERO_BG_VIDEO_MOBILE}
-          type="video/mp4"
-          media="(max-width: 768px)"
-        />
-        <source src={HERO_BG_VIDEO} type="video/mp4" />
-      </motion.video>
+      />
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-black/45 via-black/35 to-black/75" />
       <div className="absolute inset-0 z-[1] bg-[radial-gradient(circle_at_20%_20%,rgba(0,240,255,0.18),transparent_45%),radial-gradient(circle_at_80%_20%,rgba(139,0,255,0.22),transparent_50%)]" />
       
